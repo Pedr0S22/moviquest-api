@@ -1,4 +1,4 @@
-package dev.Pedro.movies_api;
+package dev.Pedro.movies_api.model;
 
 import java.util.List;
 

@@ -1,10 +1,14 @@
-package dev.Pedro.movies_api;
+package dev.Pedro.movies_api.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
+
+import dev.Pedro.movies_api.model.Movie;
+import dev.Pedro.movies_api.model.Review;
+import dev.Pedro.movies_api.repository.ReviewRepository;
 
 @Service
 public class ReviewService {

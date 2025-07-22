@@ -1,10 +1,13 @@
-package dev.Pedro.movies_api;
+package dev.Pedro.movies_api.service;
 
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import dev.Pedro.movies_api.model.Movie;
+import dev.Pedro.movies_api.repository.MovieRepository;
 
 @Service
 public class MovieService {
