@@ -11,7 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RestController
+@Slf4j
 @RequestMapping("/api/v1/movies")
 public class MovieController {
 
@@ -20,6 +23,7 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<List<Movie>> getAllMovies() {
+        log.info("All movies provided");
         return new ResponseEntity<>(movieService.AllMovies(), HttpStatus.OK);
     }
 
