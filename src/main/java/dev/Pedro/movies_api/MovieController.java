@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,13 +22,25 @@ public class MovieController {
 
     @GetMapping
     public ResponseEntity<List<Movie>> getAllMovies() {
-        log.info("All movies provided");
-        return new ResponseEntity<>(movieService.AllMovies(), HttpStatus.OK);
+        log.info("Received request to get all movies.");
+        List<Movie> movies = movieService.AllMovies();
+        log.info("Returning {} movies.", movies.size());
+
+        return ResponseEntity.ok(movies);
     }
 
     @GetMapping("/{imdbId}")
-    public ResponseEntity<Optional<Movie>> getMovie(@PathVariable String imdbId) {
-        return new ResponseEntity<>(movieService.singleMovie(imdbId), HttpStatus.OK);
+    public ResponseEntity<Movie> getMovie(@PathVariable String imdbId) {
+        log.info("Received request to get the movie with imdbId {}", imdbId);
+        Optional<Movie> movie = movieService.singleMovie(imdbId);
+
+        if (movie.isPresent()) {
+            log.info("The movie with imdbId {} was provided.", imdbId);
+            return ResponseEntity.ok(movie.get());
+        } else {
+            log.debug("The movie with imdbId {} does not exist.", imdbId);
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }
