@@ -22,4 +22,13 @@ public class MovieService {
     public Optional<Movie> singleMovie(String imdbId) {
         return movieRepository.findMovieByImdbId(imdbId);
     }
+
+    public Boolean verifyMovieExistence(String imdbId) {
+        Optional<Movie> movie = singleMovie(imdbId);
+
+        if (movie.isPresent())
+            return true;
+        else
+            return false;
+    }
 }
