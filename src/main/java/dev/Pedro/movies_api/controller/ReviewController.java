@@ -62,7 +62,7 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badRequest);
         }
 
-        String successMessage = "The review was created successfully and associated to the movie with imdbId" + imdbId;
+        String successMessage = "The review was created successfully and associated to the movie with imdbId " + imdbId;
         log.info(successMessage);
 
         Object review = reviewService.createReview(reviewBody, imdbId);
