@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
-import dev.Pedro.movies_api.model.CustomError;
+import dev.Pedro.movies_api.model.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -18,7 +18,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleMongoDatabaseError(DataAccessException ex, HttpServletRequest request) {
 
         log.error("Database error: {}", ex.getMessage(), ex);
-        CustomError error = new CustomError(
+        ApiResponse error = new ApiResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Database error",
                 ex.getMessage(),
@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handleGenericError(Exception ex, HttpServletRequest request) {
 
         log.error("Something went wrong with the server: {}", ex.getMessage(), ex);
-        CustomError error = new CustomError(
+        ApiResponse error = new ApiResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                 "Generic",
                 ex.getMessage(),

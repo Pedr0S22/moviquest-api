@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.Pedro.movies_api.model.CustomError;
+import dev.Pedro.movies_api.model.ApiResponse;
 import dev.Pedro.movies_api.model.Movie;
 import dev.Pedro.movies_api.service.MovieService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -47,7 +47,7 @@ public class MovieController {
             String errorMessage = "The movie with imdbId " + imdbId + " does not exist";
             log.debug(errorMessage);
 
-            CustomError notFound = new CustomError(
+            ApiResponse notFound = new ApiResponse(
                     HttpStatus.NOT_FOUND.value(),
                     "Not Found",
                     errorMessage,

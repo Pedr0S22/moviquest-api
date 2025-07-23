@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.Pedro.movies_api.model.CustomError;
+import dev.Pedro.movies_api.model.ApiResponse;
 import dev.Pedro.movies_api.service.MovieService;
 import dev.Pedro.movies_api.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,7 +40,7 @@ public class ReviewController {
             String errorMessage = "Missing ReviewBody and/or imdbId in request";
             log.debug(errorMessage);
 
-            CustomError error = new CustomError(
+            ApiResponse error = new ApiResponse(
                     HttpStatus.BAD_REQUEST.value(),
                     "Bad request",
                     errorMessage,
@@ -53,7 +53,7 @@ public class ReviewController {
             String errorMessage = "The movie with imdbId " + imdbId + " does not exist, so the Review was not created";
             log.debug(errorMessage);
 
-            CustomError badRequest = new CustomError(
+            ApiResponse badRequest = new ApiResponse(
                     HttpStatus.BAD_REQUEST.value(),
                     "Bad Request",
                     errorMessage,
@@ -62,8 +62,16 @@ public class ReviewController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(badRequest);
         }
 
-        log.info("The review was created successfully and associated to the movie with imdbId {}", imdbId);
-        return ResponseEntity.status(HttpStatus.CREATED).body(reviewService.createReview(reviewBody, imdbId));
+        String successMessage = "The review was created successfully and associated to the movie with imdbId" + imdbId;
+        log.info(successMessage);
+
+        Object review = reviewService.createReview(reviewBody, imdbId);
+        ApiResponse response = new ApiResponse(
+                HttpStatus.CREATED.value(),
+                successMessage,
+                review);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
 }
