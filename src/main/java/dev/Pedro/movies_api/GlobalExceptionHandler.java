@@ -6,6 +6,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.mongodb.MongoException;
+import com.mongodb.MongoSocketException;
+import com.mongodb.MongoSocketReadTimeoutException;
+import com.mongodb.MongoTimeoutException;
+
 import dev.Pedro.movies_api.model.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(DataAccessException.class)
-    public ResponseEntity<Object> handleMongoDatabaseError(DataAccessException ex, HttpServletRequest request) {
+    @ExceptionHandler({
+            MongoSocketException.class,
+            MongoTimeoutException.class,
+            MongoSocketReadTimeoutException.class,
+            MongoException.class,
+            DataAccessException.class })
+    public ResponseEntity<Object> handleMongoDatabaseError(Exception ex, HttpServletRequest request) {
 
         log.error("Database error: {}", ex.getMessage(), ex);
         ApiResponse error = new ApiResponse(
