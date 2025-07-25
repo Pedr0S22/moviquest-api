@@ -15,7 +15,7 @@ public class ApiResponse {
     private int status;
     private String errorType;
     private String message;
-    private LocalDateTime timestamp;
+    private LocalDateTime localDateTime;
     private String path;
     private Object review;
 
@@ -23,7 +23,7 @@ public class ApiResponse {
         this.status = status;
         this.errorType = errorType;
         this.message = message;
-        this.timestamp = LocalDateTime.now();
+        this.localDateTime = LocalDateTime.now();
         this.path = path;
     }
 
