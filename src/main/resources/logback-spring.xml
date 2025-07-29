@@ -26,20 +26,15 @@
         <encoder class="ch.qos.logback.classic.encoder.JsonEncoder"/>
     </appender>
 
-    <appender name="MONGO" class="dev.Pedro.movies_api.logging.MongoLogAppender" />
-
-
     <!-- Root logger sends to both console and file -->
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
-        <appender-ref ref="MONGO" />
     </root>
 
     <logger name="dev.Pedro" level="TRACE" additivity="false">
         <appender-ref ref="CONSOLE"/>
         <appender-ref ref="FILE"/>
-        <appender-ref ref="MONGO" />
     </logger>
 
     <logger name="org.springframework.boot.actuate" level="DEBUG" />
