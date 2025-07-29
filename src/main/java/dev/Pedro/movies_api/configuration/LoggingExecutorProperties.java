@@ -1,4 +1,4 @@
-package dev.Pedro.movies_api.logging.configuration;
+package dev.Pedro.movies_api.configuration;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;

@@ -1,4 +1,4 @@
-package dev.Pedro.movies_api;
+package dev.Pedro.movies_api.exception;
 
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
@@ -12,7 +12,6 @@ import com.mongodb.MongoSocketException;
 import com.mongodb.MongoSocketReadTimeoutException;
 import com.mongodb.MongoTimeoutException;
 
-import dev.Pedro.movies_api.exception.*;
 import dev.Pedro.movies_api.model.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -21,68 +20,68 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler({
-            MongoSocketException.class,
-            MongoTimeoutException.class,
-            MongoSocketReadTimeoutException.class,
-            MongoException.class,
-            DataAccessException.class
-    })
-    public ResponseEntity<Object> handleMongoDatabaseError(Exception ex, HttpServletRequest request) {
-        log.error("Database error: {}", ex.getMessage(), ex);
-        ApiResponse error = new ApiResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Database error",
-                ex.getMessage(),
-                request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
+        @ExceptionHandler({
+                        MongoSocketException.class,
+                        MongoTimeoutException.class,
+                        MongoSocketReadTimeoutException.class,
+                        MongoException.class,
+                        DataAccessException.class
+        })
+        public ResponseEntity<Object> handleMongoDatabaseError(Exception ex, HttpServletRequest request) {
+                log.error("Database error: {}", ex.getMessage(), ex);
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                                "Database error",
+                                ex.getMessage(),
+                                request.getRequestURI());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
 
-    @ExceptionHandler(InvalidReviewCreationRequestException.class)
-    public ResponseEntity<Object> handleInvalidReviewCreationRequest(InvalidReviewCreationRequestException ex,
-            HttpServletRequest request) {
+        @ExceptionHandler(InvalidReviewCreationRequestException.class)
+        public ResponseEntity<Object> handleInvalidReviewCreationRequest(InvalidReviewCreationRequestException ex,
+                        HttpServletRequest request) {
 
-        ApiResponse error = new ApiResponse(
-                HttpStatus.BAD_REQUEST.value(),
-                "Bad request",
-                ex.getMessage(),
-                request.getRequestURI());
-        return ResponseEntity.badRequest().body(error);
-    }
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Bad request",
+                                ex.getMessage(),
+                                request.getRequestURI());
+                return ResponseEntity.badRequest().body(error);
+        }
 
-    @ExceptionHandler(MovieNotFoundException.class)
-    public ResponseEntity<Object> handleMovieNotFound(MovieNotFoundException ex,
-            HttpServletRequest request) {
+        @ExceptionHandler(MovieNotFoundException.class)
+        public ResponseEntity<Object> handleMovieNotFound(MovieNotFoundException ex,
+                        HttpServletRequest request) {
 
-        ApiResponse error = new ApiResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Not found",
-                ex.getMessage(),
-                request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.NOT_FOUND.value(),
+                                "Not found",
+                                ex.getMessage(),
+                                request.getRequestURI());
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
 
-    @ExceptionHandler(NoResourceFoundException.class)
-    public ResponseEntity<Object> handleNoResourceFound(NoResourceFoundException ex, HttpServletRequest request) {
-        log.warn("No resource found for path: {}", request.getRequestURI());
+        @ExceptionHandler(NoResourceFoundException.class)
+        public ResponseEntity<Object> handleNoResourceFound(NoResourceFoundException ex, HttpServletRequest request) {
+                log.warn("No resource found for path: {}", request.getRequestURI());
 
-        ApiResponse error = new ApiResponse(
-                HttpStatus.NOT_FOUND.value(),
-                "Resource not found",
-                ex.getMessage(),
-                request.getRequestURI());
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.NOT_FOUND.value(),
+                                "Resource not found",
+                                ex.getMessage(),
+                                request.getRequestURI());
 
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
-    }
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<Object> handleGenericError(Exception ex, HttpServletRequest request) {
-        log.error("Unhandled server error: {}", ex.getMessage(), ex);
-        ApiResponse error = new ApiResponse(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "Internal server error",
-                ex.getMessage(),
-                request.getRequestURI());
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
-    }
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<Object> handleGenericError(Exception ex, HttpServletRequest request) {
+                log.error("Unhandled server error: {}", ex.getMessage(), ex);
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.INTERNAL_SERVER_ERROR.value(),
+                                "Internal server error",
+                                ex.getMessage(),
+                                request.getRequestURI());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
 }

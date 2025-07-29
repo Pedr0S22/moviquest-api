@@ -1,4 +1,4 @@
-package dev.Pedro.movies_api.logging.configuration;
+package dev.Pedro.movies_api.configuration;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
@@ -14,7 +14,7 @@ import dev.Pedro.movies_api.model.LogEvent;
 @Configuration
 public class LoggingThreadPoolExecutor {
 
-    @Bean(destroyMethod = "shutdown")
+    @Bean(name = "logExecutor", destroyMethod = "shutdown")
     public ThreadPoolExecutor logExecutor(LoggingExecutorProperties threadProperties) {
         return new ThreadPoolExecutor(
                 threadProperties.getCorePoolSize(),
