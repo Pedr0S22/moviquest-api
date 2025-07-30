@@ -22,8 +22,8 @@ public class LogbackAppenderRegistrar implements ApplicationListener<Application
 
     private static final String[] TARGET_LOG_PACKAGES = {
             "dev.Pedro",
-            "org.springframework.boot.actuate",
-            "org.springframework.boot.actuate.*"
+            // "org.springframework.boot.actuate" // -> The root is getting the
+            // actuator logs
     };
 
     @Override
@@ -44,10 +44,9 @@ public class LogbackAppenderRegistrar implements ApplicationListener<Application
         for (String eachPackage : TARGET_LOG_PACKAGES) {
             Logger packageLogger = context.getLogger(eachPackage);
             packageLogger.addAppender(mongoAppender);
-
         }
 
-        log.debug("LogBack Mongo Appender Registrar ready");
+        log.debug("Logback MongoAppenderRegistrar ready");
 
     }
 

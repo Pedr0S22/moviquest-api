@@ -79,14 +79,6 @@ public class MongoLogAppender extends AppenderBase<ILoggingEvent> {
         if (!isStarted() || buffer == null)
             return;
 
-        // Filter out Spring framework logs
-        String loggerName = event.getLoggerName();
-        if (loggerName.startsWith("org.springframework") ||
-                loggerName.startsWith("org.apache") ||
-                loggerName.startsWith("ch.qos.logback")) {
-            return;
-        }
-
         LogEvent log = toLogEvent(event);
         if (buffer.offer(log)) {
             logsProcessedCount.incrementAndGet();
