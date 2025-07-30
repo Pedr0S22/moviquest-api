@@ -9,21 +9,27 @@ import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 
 @Component
+@Slf4j
 @RequiredArgsConstructor
 public class LogbackAppenderRegistrar implements ApplicationListener<ApplicationReadyEvent> {
+
     private final MongoLogAppender mongoAppender;
+
+    private static final String[] TARGET_LOG_PACKAGES = {
+            "dev.Pedro",
+            "org.springframework.boot.actuate",
+            "org.springframework.boot.actuate.*"
+    };
 
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
-        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
-        // Remove any existing appender with this name
-        Logger rootLogger = context.getLogger(Logger.ROOT_LOGGER_NAME);
-        rootLogger.detachAppender("MONGO");
+        LoggerContext context = (LoggerContext) LoggerFactory.getILoggerFactory();
 
         // Configure the appender
         mongoAppender.setName("MONGO");
@@ -31,10 +37,18 @@ public class LogbackAppenderRegistrar implements ApplicationListener<Application
         mongoAppender.start();
 
         // Add to root logger
+        Logger rootLogger = context.getLogger(Logger.ROOT_LOGGER_NAME);
         rootLogger.addAppender(mongoAppender);
 
-        // Add to your package-specific logger too
-        Logger packageLogger = context.getLogger("dev.Pedro");
-        packageLogger.addAppender(mongoAppender);
+        // Add all packages defined earlier
+        for (String eachPackage : TARGET_LOG_PACKAGES) {
+            Logger packageLogger = context.getLogger(eachPackage);
+            packageLogger.addAppender(mongoAppender);
+
+        }
+
+        log.debug("LogBack Mongo Appender Registrar ready");
+
     }
+
 }
