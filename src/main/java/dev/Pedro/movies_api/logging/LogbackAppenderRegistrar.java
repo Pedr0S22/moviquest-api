@@ -8,24 +8,63 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 
+/**
+ * Spring component that registers the custom {@link MongoLogAppender} with
+ * Logback loggers once the application is ready.
+ *
+ * <p>
+ * This listener listens for the {@link ApplicationReadyEvent} and on receiving
+ * it:
+ * <ul>
+ * <li>Obtains the Logback {@link LoggerContext}</li>
+ * <li>Initializes and starts the {@code MongoLogAppender}</li>
+ * <li>Adds the appender to the root logger and to specified package
+ * loggers</li>
+ * </ul>
+ *
+ * This setup ensures that logs from the application and selected packages are
+ * asynchronously sent to MongoDB via the {@code MongoLogAppender}.
+ * </p>
+ */
 @Component
 @Slf4j
-@RequiredArgsConstructor
 public class LogbackAppenderRegistrar implements ApplicationListener<ApplicationReadyEvent> {
 
+    /**
+     * The MongoDB log appender that handles log persistence.
+     */
     private final MongoLogAppender mongoAppender;
 
+    /**
+     * List of package names to which the MongoLogAppender will be attached.
+     */
     private static final String[] TARGET_LOG_PACKAGES = {
             "dev.Pedro",
-            // "org.springframework.boot.actuate" // -> The root is getting the
-            // actuator logs
+            // "org.springframework.boot.actuate" // The root is getting the actuator logs
     };
 
+    /**
+     * Constructs a {@code LogbackAppenderRegistrar} with the given
+     * {@link MongoLogAppender}.
+     *
+     * @param mongoAppender the MongoDB log appender to be registered with Logback
+     *                      loggers
+     */
+    public LogbackAppenderRegistrar(MongoLogAppender mongoAppender) {
+        this.mongoAppender = mongoAppender;
+    }
+
+    /**
+     * Handles the application ready event by registering the
+     * {@code MongoLogAppender}
+     * with the Logback root logger and specified package loggers.
+     *
+     * @param event the application ready event
+     */
     @Override
     public void onApplicationEvent(@NonNull ApplicationReadyEvent event) {
 
@@ -46,8 +85,6 @@ public class LogbackAppenderRegistrar implements ApplicationListener<Application
             packageLogger.addAppender(mongoAppender);
         }
 
-        log.debug("Logback MongoAppenderRegistrar ready");
-
+        log.debug("Logback MongoAppenderRegistrar is ready");
     }
-
 }

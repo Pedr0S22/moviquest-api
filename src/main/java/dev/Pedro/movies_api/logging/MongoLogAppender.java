@@ -5,6 +5,8 @@ import ch.qos.logback.classic.spi.ILoggingEvent;
 import dev.Pedro.movies_api.configuration.LoggingExecutorProperties;
 import dev.Pedro.movies_api.model.LogEvent;
 import dev.Pedro.movies_api.service.LogRetryService;
+import lombok.extern.slf4j.Slf4j;
+
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -12,18 +14,17 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
+@Slf4j
 public class MongoLogAppender extends AppenderBase<ILoggingEvent> {
+
     private MongoLogBuffer buffer;
     private ThreadPoolExecutor executor;
     private LoggingExecutorProperties config;
     private LogRetryService retryService;
 
     private volatile boolean running = false;
-    private volatile Exception lastError = null;
-    private final AtomicLong logsProcessedCount = new AtomicLong(0);
 
     // Required for Logback initialization
     public MongoLogAppender() {
@@ -53,15 +54,15 @@ public class MongoLogAppender extends AppenderBase<ILoggingEvent> {
                         List<LogEvent> batch = buffer.drainBatch(config.getBatchSize());
                         if (!batch.isEmpty()) {
                             retryService.saveLogs(batch);
-                            logsProcessedCount.addAndGet(batch.size());
                         }
                         Thread.sleep(config.getRetryDelayMs());
                     } catch (InterruptedException e) {
                         Thread.currentThread().interrupt();
                         running = false;
                     } catch (Exception e) {
-                        lastError = e;
-                        addError("Error saving logs to MongoDB", e);
+                        String message = "Error saving logs to MongoDB";
+                        log.error(message, e);
+                        addError(message, e);
                         try {
                             Thread.sleep(1000);
                         } catch (InterruptedException ie) {
@@ -79,12 +80,11 @@ public class MongoLogAppender extends AppenderBase<ILoggingEvent> {
         if (!isStarted() || buffer == null)
             return;
 
-        LogEvent log = toLogEvent(event);
-        if (buffer.offer(log)) {
-            logsProcessedCount.incrementAndGet();
-        } else {
-            lastError = new RuntimeException("Buffer full - log dropped");
-            addError(lastError.getMessage(), lastError);
+        LogEvent logEvent = toLogEvent(event);
+        if (!buffer.offerAndVerify(logEvent)) {
+            String message = "Buffer full - log dropped";
+            log.error(message);
+            addError(message);
         }
     }
 
@@ -102,23 +102,5 @@ public class MongoLogAppender extends AppenderBase<ILoggingEvent> {
                 event.getThreadName(),
                 event.getFormattedMessage(),
                 event.getMDCPropertyMap());
-    }
-
-    public boolean isRunning() {
-        return running && !Thread.currentThread().isInterrupted();
-    }
-
-    public int getBufferSize() {
-        synchronized (this) {
-            return buffer != null ? buffer.size() : 0;
-        }
-    }
-
-    public String getLastError() {
-        return lastError != null ? lastError.getClass().getSimpleName() + ": " + lastError.getMessage() : "No errors";
-    }
-
-    public long getLogsProcessedCount() {
-        return logsProcessedCount.get();
     }
 }

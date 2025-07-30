@@ -20,7 +20,6 @@ public class LogRetryService {
         this.buffer = buffer;
     }
 
-    // Retry only on transient exceptions, NOT on duplicate key or non-transient
     @Retry(name = "mongoRetry", fallbackMethod = "fallback")
     public void saveLogs(List<LogEvent> logs) {
         repository.saveAll(logs);
