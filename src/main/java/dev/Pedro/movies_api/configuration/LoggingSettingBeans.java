@@ -29,13 +29,13 @@ import dev.Pedro.movies_api.model.LogEvent;
  * </p>
  */
 @Configuration
-public class LoggingThreadPoolExecutor {
+public class LoggingSettingBeans {
 
     /**
      * Creates a {@link ThreadPoolExecutor} bean named "logExecutor" for processing
      * logging tasks.
      * The thread pool parameters are injected from
-     * {@link LoggingExecutorProperties}. Also, when the {@code shutdown} method is
+     * {@link LoggingVariables}. Also, when the {@code shutdown} method is
      * launched,
      * this bean will be destroyed.
      *
@@ -43,7 +43,7 @@ public class LoggingThreadPoolExecutor {
      * @return a configured ThreadPoolExecutor instance.
      */
     @Bean(name = "logExecutor", destroyMethod = "shutdown")
-    public ThreadPoolExecutor logExecutor(LoggingExecutorProperties threadProperties) {
+    public ThreadPoolExecutor logExecutor(LoggingVariables threadProperties) {
         return new ThreadPoolExecutor(
                 threadProperties.getCorePoolSize(),
                 threadProperties.getMaxPoolSize(),
@@ -66,7 +66,7 @@ public class LoggingThreadPoolExecutor {
      * @return a LinkedBlockingQueue with the configured capacity
      */
     @Bean
-    public BlockingQueue<LogEvent> logBuffer(LoggingExecutorProperties bufferProperties) {
+    public BlockingQueue<LogEvent> logBuffer(LoggingVariables bufferProperties) {
         return new LinkedBlockingQueue<>(bufferProperties.getBufferCapacity());
     }
 }

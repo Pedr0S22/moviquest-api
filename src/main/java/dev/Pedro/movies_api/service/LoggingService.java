@@ -10,12 +10,12 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class LogRetryService {
+public class LoggingService {
 
     private final LogEventRepository repository;
     private final MongoLogBuffer buffer;
 
-    public LogRetryService(LogEventRepository repository, MongoLogBuffer buffer) {
+    public LoggingService(LogEventRepository repository, MongoLogBuffer buffer) {
         this.repository = repository;
         this.buffer = buffer;
     }

@@ -43,7 +43,7 @@ import lombok.Data;
 @Configuration
 @ConfigurationProperties(prefix = "logging")
 @Data
-public class LoggingExecutorProperties {
+public class LoggingVariables {
 
     // Thread Pool
     private int corePoolSize;
