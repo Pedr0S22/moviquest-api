@@ -11,6 +11,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * Represents a log event stored in the MongoDB collection "logEvents".
+ * <p>
+ * This class captures logging metadata including log level, logger name,
+ * message, thread, MDC and timestamp.
+ * </p>
+ */
 @Document(collection = "logEvents")
 @Data
 @AllArgsConstructor
@@ -27,6 +34,16 @@ public class LogEvent {
     private String message;
     private Map<String, String> mdc;
 
+    /**
+     * Constructs a LogEvent with basic information. MDC is not included.
+     * The timestamp is set to the current time.
+     *
+     * @param logId   Unique ID for the log.
+     * @param level   Log level.
+     * @param logger  Logger name.
+     * @param thread  Thread name.
+     * @param message Log message.
+     */
     public LogEvent(ObjectId logId, String level, String logger, String thread, String message) {
         this.logId = logId;
         this.localDateTime = LocalDateTime.now();
@@ -36,6 +53,17 @@ public class LogEvent {
         this.message = message;
     }
 
+    /**
+     * Constructs a LogEvent with MDC context.
+     * The timestamp is set to the current time.
+     *
+     * @param logId   Unique ID for the log.
+     * @param level   Log level.
+     * @param logger  Logger name.
+     * @param thread  Thread name.
+     * @param message Log message.
+     * @param mdc     Mapped Diagnostic Context metadata.
+     */
     public LogEvent(ObjectId logId, String level, String logger, String thread, String message,
             Map<String, String> mdc) {
 
