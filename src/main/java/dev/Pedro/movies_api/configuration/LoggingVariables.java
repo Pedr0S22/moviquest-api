@@ -52,7 +52,6 @@ public class LoggingVariables {
 
     // Log batching
     private int batchSize;
-    private int maxRetries;
     private int retryDelayMs;
     private int bufferCapacity;
 }
