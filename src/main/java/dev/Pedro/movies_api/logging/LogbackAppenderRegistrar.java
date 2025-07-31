@@ -19,6 +19,7 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
  * <p>
  * This listener listens for the {@link ApplicationReadyEvent} and on receiving
  * it:
+ * </p>
  * <ul>
  * <li>Obtains the Logback {@link LoggerContext}</li>
  * <li>Initializes and starts the {@code MongoLogAppender}</li>
@@ -26,6 +27,8 @@ import org.springframework.boot.context.event.ApplicationReadyEvent;
  * loggers</li>
  * </ul>
  *
+ *
+ * <p>
  * This setup ensures that logs from the application and selected packages are
  * asynchronously sent to MongoDB via the {@code MongoLogAppender}.
  * </p>

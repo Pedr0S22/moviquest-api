@@ -86,7 +86,6 @@ public class MongoLogBuffer {
      * Attempts to add a new log event to the buffer without blocking.
      *
      * @param log the log event to add.
-     * @return void.
      */
     public void offer(LogEvent log) {
         buffer.offer(log);
