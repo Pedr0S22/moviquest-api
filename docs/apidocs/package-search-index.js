@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"dev.Pedro.movies_api"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"dev.Pedro.movies_api"},{"l":"dev.Pedro.movies_api.configuration"},{"l":"dev.Pedro.movies_api.controller"},{"l":"dev.Pedro.movies_api.exception"},{"l":"dev.Pedro.movies_api.logging"},{"l":"dev.Pedro.movies_api.model"},{"l":"dev.Pedro.movies_api.repository"},{"l":"dev.Pedro.movies_api.service"}];updateSearchResults();

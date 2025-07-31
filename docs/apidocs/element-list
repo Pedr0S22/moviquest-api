@@ -1,1 +1,8 @@
 dev.Pedro.movies_api
+dev.Pedro.movies_api.configuration
+dev.Pedro.movies_api.controller
+dev.Pedro.movies_api.exception
+dev.Pedro.movies_api.logging
+dev.Pedro.movies_api.model
+dev.Pedro.movies_api.repository
+dev.Pedro.movies_api.service
