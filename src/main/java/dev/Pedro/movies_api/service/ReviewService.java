@@ -1,6 +1,5 @@
 package dev.Pedro.movies_api.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Update;
@@ -16,14 +15,17 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class ReviewService {
 
-    @Autowired
-    ReviewRepository reviewRepository;
+    private final ReviewRepository reviewRepository;
 
-    @Autowired
-    MovieService movieService;
+    private final MovieService movieService;
 
-    @Autowired
-    private MongoTemplate mongoTemplate;
+    private final MongoTemplate mongoTemplate;
+
+    public ReviewService(ReviewRepository reviewRepository, MovieService movieService, MongoTemplate mongoTemplate) {
+        this.reviewRepository = reviewRepository;
+        this.movieService = movieService;
+        this.mongoTemplate = mongoTemplate;
+    }
 
     public Review createReview(String reviewBody, String imdbId) {
 

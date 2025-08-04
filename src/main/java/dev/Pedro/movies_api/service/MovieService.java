@@ -3,7 +3,6 @@ package dev.Pedro.movies_api.service;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import dev.Pedro.movies_api.exception.MovieNotFoundException;
@@ -15,8 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class MovieService {
 
-    @Autowired
-    private MovieRepository movieRepository;
+    private final MovieRepository movieRepository;
+
+    public MovieService(MovieRepository movieRepository) {
+        this.movieRepository = movieRepository;
+    }
 
     public List<Movie> AllMovies() {
         return movieRepository.findAll();
