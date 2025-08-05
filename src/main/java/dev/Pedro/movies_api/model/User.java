@@ -31,7 +31,7 @@ public class User {
     private String email;
 
     @NotBlank
-    @Size(min = 8)
+    @Size(min = 8, max = 40)
     private String password;
 
     @DocumentReference
