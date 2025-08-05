@@ -2,7 +2,7 @@ package dev.Pedro.movies_api.logging;
 
 import ch.qos.logback.core.AppenderBase;
 import ch.qos.logback.classic.spi.ILoggingEvent;
-import dev.Pedro.movies_api.configuration.LoggingVariables;
+import dev.Pedro.movies_api.logging.configuration.LoggingVariables;
 import dev.Pedro.movies_api.model.LogEvent;
 import dev.Pedro.movies_api.service.LoggingService;
 import lombok.extern.slf4j.Slf4j;

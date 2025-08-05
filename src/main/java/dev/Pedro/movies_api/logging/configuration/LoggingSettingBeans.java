@@ -1,4 +1,4 @@
-package dev.Pedro.movies_api.configuration;
+package dev.Pedro.movies_api.logging.configuration;
 
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executors;
