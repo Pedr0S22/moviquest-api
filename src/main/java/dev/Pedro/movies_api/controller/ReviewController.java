@@ -47,4 +47,7 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
+    // Update review Idea: @PreAuthorize("#review.authorId ==
+    // authentication.principal.id or hasRole('ADMIN')")
+
 }
