@@ -34,7 +34,13 @@ public class User {
     @Size(min = 8, max = 40)
     private String password;
 
+    // ROLE_USER by default if it is null
     @DocumentReference
-    @NotBlank
     private Set<Role> roles;
+
+    public User(String username, String email, String password) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+    }
 }
