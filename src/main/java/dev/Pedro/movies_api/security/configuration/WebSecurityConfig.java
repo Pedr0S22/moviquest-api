@@ -64,10 +64,10 @@ public class WebSecurityConfig {
                 // Set session policy to stateless
                 .authorizeHttpRequests(auth -> auth
                         // Configure authorization for HTTP requests
-                        .requestMatchers("/api/auth/**").permitAll()
-                        // Allow public access to auth endpoints
-                        .requestMatchers("/api/test/**").permitAll()
-                        // Allow public access to test endpoints
+                        .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/v1/movies/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/actuator/**").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/logging/**").hasRole("ADMIN")
                         .anyRequest().authenticated());
 
         // Add the JWT token filter before the username/password authentication filter
