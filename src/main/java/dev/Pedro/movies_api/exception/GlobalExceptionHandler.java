@@ -1,5 +1,7 @@
 package dev.Pedro.movies_api.exception;
 
+import javax.management.relation.RoleNotFoundException;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -80,6 +82,40 @@ public class GlobalExceptionHandler {
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.NOT_FOUND.value(),
                                 "Username Not found",
+                                ex.getMessage(),
+                                request.getRequestURI());
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+
+        @ExceptionHandler(EmailAlreadyExistsException.class)
+        public ResponseEntity<Object> handleEmailInDB(EmailAlreadyExistsException ex, HttpServletRequest request) {
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.CONFLICT.value(),
+                                "Conflict resources with email",
+                                ex.getMessage(),
+                                request.getRequestURI());
+
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        }
+
+        @ExceptionHandler(UsernameAlreadyExistsException.class)
+        public ResponseEntity<Object> handleUsernameInDB(UsernameAlreadyExistsException ex,
+                        HttpServletRequest request) {
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.CONFLICT.value(),
+                                "Conflict resources with username",
+                                ex.getMessage(),
+                                request.getRequestURI());
+
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        }
+
+        @ExceptionHandler(RoleNotFoundException.class)
+        public ResponseEntity<Object> handleRoleNotFound(RoleNotFoundException ex, HttpServletRequest request) {
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.NOT_FOUND.value(),
+                                "Role not found",
                                 ex.getMessage(),
                                 request.getRequestURI());
 
