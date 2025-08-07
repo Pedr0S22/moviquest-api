@@ -1,6 +1,9 @@
 package dev.Pedro.movies_api.security.response;
 
+import java.time.LocalDateTime;
 import java.util.Set;
+
+import org.bson.types.ObjectId;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
@@ -14,26 +17,32 @@ import lombok.NoArgsConstructor;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class JwtResponse {
 
-    private String token;
+    private int status;
+    private LocalDateTime localDateTime;
+
+    private ObjectId id;
+    private String accessToken;
     private String type = "Bearer";
-    private String id;
     private String username;
     private String email;
     private Set<String> roles;
 
     private String message;
 
-    public JwtResponse(String accessToken, String id, String username, String email, Set<String> roles) {
-        this.token = accessToken;
-        this.id = id;
+    public JwtResponse(int status, String id, String accessToken, String username,
+            String email, Set<String> roles) {
+
+        this.status = status;
+        this.localDateTime = LocalDateTime.now();
         this.username = username;
         this.email = email;
         this.roles = roles;
     }
 
-    public JwtResponse(String id, String username, String email, Set<String> roles, String message) {
+    public JwtResponse(int status, String username, String email, Set<String> roles, String message) {
 
-        this.id = id;
+        this.status = status;
+        this.localDateTime = LocalDateTime.now();
         this.username = username;
         this.email = email;
         this.roles = roles;
