@@ -45,7 +45,6 @@ public class JwtResponse {
         this.localDateTime = LocalDateTime.now();
         this.username = username;
         this.email = email;
-        this.roles = roles;
         this.message = message;
     }
 }
