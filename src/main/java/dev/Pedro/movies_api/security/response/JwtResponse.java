@@ -22,14 +22,14 @@ public class JwtResponse {
 
     private ObjectId id;
     private String accessToken;
-    private String type = "Bearer";
+    private String type;
     private String username;
     private String email;
     private Set<String> roles;
 
     private String message;
 
-    public JwtResponse(int status, String id, String accessToken, String username,
+    public JwtResponse(int status, String accessToken, String username,
             String email, Set<String> roles) {
 
         this.status = status;
@@ -37,6 +37,8 @@ public class JwtResponse {
         this.username = username;
         this.email = email;
         this.roles = roles;
+        this.type = "Bearer";
+        this.accessToken = accessToken;
     }
 
     public JwtResponse(int status, String username, String email, Set<String> roles, String message) {
@@ -45,6 +47,7 @@ public class JwtResponse {
         this.localDateTime = LocalDateTime.now();
         this.username = username;
         this.email = email;
+        this.roles = roles;
         this.message = message;
     }
 }
