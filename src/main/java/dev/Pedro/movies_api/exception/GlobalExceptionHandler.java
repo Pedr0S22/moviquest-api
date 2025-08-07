@@ -1,7 +1,5 @@
 package dev.Pedro.movies_api.exception;
 
-import javax.management.relation.RoleNotFoundException;
-
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -114,17 +112,17 @@ public class GlobalExceptionHandler {
         @ExceptionHandler(RoleNotFoundException.class)
         public ResponseEntity<Object> handleRoleNotFound(RoleNotFoundException ex, HttpServletRequest request) {
                 ApiResponse error = new ApiResponse(
-                                HttpStatus.NOT_FOUND.value(),
-                                "Role not found",
+                                HttpStatus.CONFLICT.value(),
+                                "Conflict with Role not found",
                                 ex.getMessage(),
                                 request.getRequestURI());
 
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }
 
         @ExceptionHandler(Exception.class)
         public ResponseEntity<Object> handleGenericError(Exception ex, HttpServletRequest request) {
-                log.error("Unhandled server error: {}", ex.getMessage(), ex);
+                log.error("Unhandled server error: {} - {}", ex.getMessage(), ex.getClass());
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                                 "Internal server error",
