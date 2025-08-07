@@ -12,7 +12,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 @Repository
 public interface UserRepository extends MongoRepository<User, ObjectId> {
 
-    public Optional<User> findUserbyUsername(String username);
+    public Optional<User> findByUsername(String username);
 
     public Boolean existsByUsername(String username);
 
