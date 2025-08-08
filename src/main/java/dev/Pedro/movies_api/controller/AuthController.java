@@ -29,7 +29,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Object> handleLogin(@RequestBody LoginRequest login) {
+    public ResponseEntity<JwtResponse> handleLogin(@RequestBody LoginRequest login) {
 
         // Se o login corresponder enviar JwtResponse
 
@@ -37,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<Object> handleSignup(@RequestBody SignupRequest signup) {
+    public ResponseEntity<JwtResponse> handleSignup(@RequestBody SignupRequest signup) {
 
         log.info("Received request to register a new User");
 
