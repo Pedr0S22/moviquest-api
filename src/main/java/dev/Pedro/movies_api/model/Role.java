@@ -15,4 +15,8 @@ public class Role {
 
     private ClientRoles roleName;
 
+    public Role(ClientRoles roleName) {
+        this.roleName = roleName;
+    }
+
 }
