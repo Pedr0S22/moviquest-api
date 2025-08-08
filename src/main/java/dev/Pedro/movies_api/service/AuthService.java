@@ -46,18 +46,18 @@ public class AuthService {
         return ResponseEntity.ok(null);
     }
 
-    public ResponseEntity<Object> handleSignupService(@Valid @RequestBody SignupRequest signup) {
+    public User handleSignupService(@Valid @RequestBody SignupRequest signup) {
 
         // Verify if username exists in database
         String username = signup.getUsername();
-        if (!userRepository.existsByUsername(username)) {
+        if (userRepository.existsByUsername(username)) {
             log.debug("The username {} is already taken", username);
             throw new UsernameAlreadyExistsException("The username is already taken");
         }
 
         // verify if email exists in database
         String email = signup.getEmail();
-        if (!userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmail(email)) {
             log.debug("The email {} is already taken", email);
             throw new EmailAlreadyExistsException("The email is already taken");
         }
@@ -71,8 +71,8 @@ public class AuthService {
         Set<String> strRoles = signup.getRoles();
         Set<Role> roles = new HashSet<>();
 
-        if (strRoles == null) {
-            Optional<Role> userRole = roleRepository.findByRoleName(ClientRoles.USER_ROLE);
+        if (strRoles == null || strRoles.isEmpty()) {
+            Optional<Role> userRole = roleRepository.findByRoleName(ClientRoles.ROLE_USER);
             if (userRole.isPresent()) {
                 roles.add(userRole.get());
             } else {
@@ -81,23 +81,36 @@ public class AuthService {
             }
         } else {
             strRoles.forEach(role -> {
-                switch (role) {
+                switch (role.toLowerCase()) {
                     case "admin":
-
+                        Optional<Role> adminRole = roleRepository.findByRoleName(ClientRoles.ROLE_ADMIN);
+                        if (adminRole.isPresent()) {
+                            roles.add(adminRole.get());
+                            roles.add(new Role(ClientRoles.ROLE_USER));
+                        } else {
+                            log.debug("Role {} does not exist in database", adminRole);
+                            throw new RoleNotFoundException("Role " + adminRole + " does not exist in database");
+                        }
                         break;
 
                     default:
+                        Optional<Role> userRole = roleRepository.findByRoleName(ClientRoles.ROLE_USER);
+                        if (userRole.isPresent()) {
+                            log.debug("the userRole: {}", userRole);
+                            roles.add(userRole.get());
+                        } else {
+                            log.debug("Role {} does not exist in database", userRole);
+                            throw new RoleNotFoundException("Role " + userRole + " does not exist in database");
+                        }
                         break;
                 }
             });
-
         }
 
-        // Append roles into User object
+        // Append roles into User object and send it to Database
         user.setRoles(roles);
+        userRepository.save(user);
 
-        // Enviar a confirmação de criação da conta
-
-        return ResponseEntity.ok(null);
+        return user;
     }
 }

@@ -1,11 +1,17 @@
 package dev.Pedro.movies_api.controller;
 
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.Pedro.movies_api.model.User;
 import dev.Pedro.movies_api.security.request.LoginRequest;
 import dev.Pedro.movies_api.security.request.SignupRequest;
+import dev.Pedro.movies_api.security.response.JwtResponse;
 import dev.Pedro.movies_api.service.AuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,15 +39,26 @@ public class AuthController {
     @PostMapping("/signup")
     public ResponseEntity<Object> handleSignup(@RequestBody SignupRequest signup) {
 
-        // verificar se já existe username
+        log.info("Received request to register a new User");
 
-        // verificar se já existe email
+        User user = authService.handleSignupService(signup);
 
-        // Criar objeto User e Role e inserir na base de dados
-        // encode da password
+        log.info("User {} registered successfully!", user.getUsername());
 
-        // Enviar a confirmação de criação da conta
+        String message = "User " + user.getUsername() + " registered successfully!";
 
-        return ResponseEntity.ok(null);
+        Set<String> roles = user.getRoles()
+                .stream()
+                .map(role -> role.getRoleName().toString().substring(12))
+                .collect(Collectors.toSet());
+
+        JwtResponse signupResponse = new JwtResponse(
+                HttpStatus.CREATED.value(),
+                user.getUsername(),
+                user.getEmail(),
+                roles,
+                message);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(signupResponse);
     }
 }
