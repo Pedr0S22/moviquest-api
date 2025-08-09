@@ -1,9 +1,13 @@
 package dev.Pedro.movies_api.exception;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -28,7 +32,7 @@ public class GlobalExceptionHandler {
                         MongoException.class,
                         DataAccessException.class
         })
-        public ResponseEntity<Object> handleMongoDatabaseError(Exception ex, HttpServletRequest request) {
+        public ResponseEntity<ApiResponse> handleMongoDatabaseError(Exception ex, HttpServletRequest request) {
                 log.error("Database error: {}", ex.getMessage(), ex);
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -39,7 +43,7 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(InvalidReviewCreationRequestException.class)
-        public ResponseEntity<Object> handleInvalidReviewCreationRequest(InvalidReviewCreationRequestException ex,
+        public ResponseEntity<ApiResponse> handleInvalidReviewCreationRequest(InvalidReviewCreationRequestException ex,
                         HttpServletRequest request) {
 
                 ApiResponse error = new ApiResponse(
@@ -51,7 +55,7 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(MovieNotFoundException.class)
-        public ResponseEntity<Object> handleMovieNotFound(MovieNotFoundException ex,
+        public ResponseEntity<ApiResponse> handleMovieNotFound(MovieNotFoundException ex,
                         HttpServletRequest request) {
 
                 ApiResponse error = new ApiResponse(
@@ -63,7 +67,8 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(NoResourceFoundException.class)
-        public ResponseEntity<Object> handleNoResourceFound(NoResourceFoundException ex, HttpServletRequest request) {
+        public ResponseEntity<ApiResponse> handleNoResourceFound(NoResourceFoundException ex,
+                        HttpServletRequest request) {
                 log.warn("No resource found for path: {}", request.getRequestURI());
 
                 ApiResponse error = new ApiResponse(
@@ -76,7 +81,8 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(UsernameNotFoundException.class)
-        public ResponseEntity<Object> handleUsernameNotFound(UsernameNotFoundException ex, HttpServletRequest request) {
+        public ResponseEntity<ApiResponse> handleUsernameNotFound(UsernameNotFoundException ex,
+                        HttpServletRequest request) {
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.NOT_FOUND.value(),
                                 "Username Not found",
@@ -87,7 +93,7 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(EmailAlreadyExistsException.class)
-        public ResponseEntity<Object> handleEmailInDB(EmailAlreadyExistsException ex, HttpServletRequest request) {
+        public ResponseEntity<ApiResponse> handleEmailInDB(EmailAlreadyExistsException ex, HttpServletRequest request) {
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.CONFLICT.value(),
                                 "Conflict resources with email",
@@ -98,7 +104,7 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(UsernameAlreadyExistsException.class)
-        public ResponseEntity<Object> handleUsernameInDB(UsernameAlreadyExistsException ex,
+        public ResponseEntity<ApiResponse> handleUsernameInDB(UsernameAlreadyExistsException ex,
                         HttpServletRequest request) {
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.CONFLICT.value(),
@@ -110,7 +116,7 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(RoleNotFoundException.class)
-        public ResponseEntity<Object> handleRoleNotFound(RoleNotFoundException ex, HttpServletRequest request) {
+        public ResponseEntity<ApiResponse> handleRoleNotFound(RoleNotFoundException ex, HttpServletRequest request) {
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.CONFLICT.value(),
                                 "Conflict with Role not found",
@@ -120,8 +126,26 @@ public class GlobalExceptionHandler {
                 return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
         }
 
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<ApiResponse> handleArgumentsNotValid(MethodArgumentNotValidException ex,
+                        HttpServletRequest request) {
+
+                Map<String, String> errors = new HashMap<>();
+
+                ex.getBindingResult().getFieldErrors()
+                                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+
+                log.debug("Invalid Request came from client.");
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Bad Request",
+                                errors,
+                                request.getRequestURI());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+
         @ExceptionHandler(Exception.class)
-        public ResponseEntity<Object> handleGenericError(Exception ex, HttpServletRequest request) {
+        public ResponseEntity<ApiResponse> handleGenericError(Exception ex, HttpServletRequest request) {
                 log.error("Unhandled server error: {} - {}", ex.getMessage(), ex.getClass());
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
