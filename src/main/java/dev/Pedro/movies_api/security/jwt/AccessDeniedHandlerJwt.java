@@ -18,6 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AccessDeniedHandlerJwt implements AccessDeniedHandler {
 
+    private final ObjectMapper mapper;
+
+    public AccessDeniedHandlerJwt(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response,
             AccessDeniedException accessDeniedException) throws IOException, ServletException {
@@ -33,7 +39,6 @@ public class AccessDeniedHandlerJwt implements AccessDeniedHandler {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_FORBIDDEN);
 
-        ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(mapper.writeValueAsString(deniedResponse));
     }
 

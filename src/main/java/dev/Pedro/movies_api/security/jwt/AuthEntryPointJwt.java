@@ -18,6 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AuthEntryPointJwt implements AuthenticationEntryPoint {
 
+    private final ObjectMapper mapper;
+
+    public AuthEntryPointJwt(ObjectMapper mapper) {
+        this.mapper = mapper;
+    }
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
             AuthenticationException authException) throws IOException, ServletException {
@@ -33,7 +39,6 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
         response.setContentType("application/json");
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
-        ObjectMapper mapper = new ObjectMapper();
         response.getWriter().write(mapper.writeValueAsString(unauthorizedResponse));
     }
 
