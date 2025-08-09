@@ -8,11 +8,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.Pedro.movies_api.dto.request.LoginRequest;
+import dev.Pedro.movies_api.dto.request.SignupRequest;
 import dev.Pedro.movies_api.model.User;
-import dev.Pedro.movies_api.security.request.LoginRequest;
-import dev.Pedro.movies_api.security.request.SignupRequest;
 import dev.Pedro.movies_api.security.response.JwtResponse;
 import dev.Pedro.movies_api.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<JwtResponse> handleLogin(@RequestBody LoginRequest login) {
+    public ResponseEntity<JwtResponse> handleLogin(@Valid @RequestBody LoginRequest login) {
 
         // Se o login corresponder enviar JwtResponse
 
@@ -37,7 +38,7 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<JwtResponse> handleSignup(@RequestBody SignupRequest signup) {
+    public ResponseEntity<JwtResponse> handleSignup(@Valid @RequestBody SignupRequest signup) {
 
         log.info("Received request to register a new User");
 

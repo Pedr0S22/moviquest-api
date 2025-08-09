@@ -7,8 +7,9 @@ import java.util.Set;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
+import dev.Pedro.movies_api.dto.request.LoginRequest;
+import dev.Pedro.movies_api.dto.request.SignupRequest;
 import dev.Pedro.movies_api.exception.EmailAlreadyExistsException;
 import dev.Pedro.movies_api.exception.RoleNotFoundException;
 import dev.Pedro.movies_api.exception.UsernameAlreadyExistsException;
@@ -17,9 +18,6 @@ import dev.Pedro.movies_api.model.Role;
 import dev.Pedro.movies_api.model.User;
 import dev.Pedro.movies_api.repository.RoleRepository;
 import dev.Pedro.movies_api.repository.UserRepository;
-import dev.Pedro.movies_api.security.request.LoginRequest;
-import dev.Pedro.movies_api.security.request.SignupRequest;
-import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -36,7 +34,7 @@ public class AuthService {
         this.encoder = encoder;
     }
 
-    public ResponseEntity<Object> handleLoginService(@Valid @RequestBody LoginRequest login) {
+    public ResponseEntity<Object> handleLoginService(LoginRequest login) {
 
         // fazer autenticação
 
@@ -46,7 +44,7 @@ public class AuthService {
         return ResponseEntity.ok(null);
     }
 
-    public User handleSignupService(@Valid @RequestBody SignupRequest signup) {
+    public User handleSignupService(SignupRequest signup) {
 
         // Verify if username exists in database
         String username = signup.getUsername();
