@@ -32,18 +32,18 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> handleLogin(@Valid @RequestBody LoginRequest login) {
 
-        // Se o login corresponder enviar JwtResponse
+        log.info("Received request to login the user {} ", login.getUsername());
+        JwtResponse response = authService.handleLoginService(login);
+        log.info("Login of user {} was successful", login.getUsername());
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/signup")
     public ResponseEntity<JwtResponse> handleSignup(@Valid @RequestBody SignupRequest signup) {
 
         log.info("Received request to register a new User");
-
         User user = authService.handleSignupService(signup);
-
         log.info("User {} registered successfully!", user.getUsername());
 
         String message = "User " + user.getUsername() + " registered successfully!";
