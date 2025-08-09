@@ -1,4 +1,4 @@
-package dev.Pedro.movies_api.model;
+package dev.Pedro.movies_api.dto.response;
 
 import java.time.LocalDateTime;
 import java.util.Map;

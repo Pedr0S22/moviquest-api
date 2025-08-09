@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.Pedro.movies_api.model.ApiResponse;
+import dev.Pedro.movies_api.dto.response.ApiResponse;
 import dev.Pedro.movies_api.model.Review;
 import dev.Pedro.movies_api.service.ReviewService;
 import jakarta.servlet.http.HttpServletRequest;

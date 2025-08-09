@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import dev.Pedro.movies_api.dto.request.LoginRequest;
 import dev.Pedro.movies_api.dto.request.SignupRequest;
+import dev.Pedro.movies_api.dto.response.JwtResponse;
 import dev.Pedro.movies_api.model.User;
-import dev.Pedro.movies_api.security.response.JwtResponse;
 import dev.Pedro.movies_api.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
