@@ -1,4 +1,4 @@
-package dev.Pedro.movies_api.security.request;
+package dev.Pedro.movies_api.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

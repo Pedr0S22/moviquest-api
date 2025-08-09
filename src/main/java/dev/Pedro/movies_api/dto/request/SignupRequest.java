@@ -1,4 +1,4 @@
-package dev.Pedro.movies_api.security.request;
+package dev.Pedro.movies_api.dto.request;
 
 import java.util.Set;
 
@@ -28,6 +28,5 @@ public class SignupRequest {
     private String password;
 
     @DocumentReference
-    @NotBlank
     private Set<String> roles;
 }
