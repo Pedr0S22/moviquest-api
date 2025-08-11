@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import dev.Pedro.movies_api.model.Movie;
 import dev.Pedro.movies_api.model.Review;
+import dev.Pedro.movies_api.dto.request.NewReviewRequest;
 import dev.Pedro.movies_api.exception.*;
 import dev.Pedro.movies_api.repository.ReviewRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -27,27 +28,21 @@ public class ReviewService {
         this.mongoTemplate = mongoTemplate;
     }
 
-    public Review createReview(String reviewBody, String imdbId) {
+    public Review createReview(NewReviewRequest newReview) {
 
-        if (reviewBody == null || imdbId == null || reviewBody.isBlank() || imdbId.isBlank()) {
+        if (!movieService.verifyMovieExistence(newReview.getImdbId())) {
 
-            String errorMessage = "Missing ReviewBody and/or imdbId in request";
-            log.debug(errorMessage);
-
-            throw new InvalidReviewCreationRequestException(errorMessage);
-
-        } else if (!movieService.verifyMovieExistence(imdbId)) {
-
-            String errorMessage = "The movie with imdbId " + imdbId + " does not exist, so the Review was not created";
+            String errorMessage = "The movie with imdbId " + newReview.getImdbId()
+                    + " does not exist, so the Review was not created";
             log.debug(errorMessage);
 
             throw new MovieNotFoundException(errorMessage);
         }
 
-        Review review = reviewRepository.insert(new Review(reviewBody));
+        Review review = reviewRepository.insert(new Review(newReview.getBody()));
 
         mongoTemplate.update(Movie.class)
-                .matching(Criteria.where("imdbId").is(imdbId))
+                .matching(Criteria.where("imdbId").is(newReview.getImdbId()))
                 .apply(new Update().push("reviewIds").value(review.getId()))
                 .first();
 
