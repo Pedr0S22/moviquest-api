@@ -120,7 +120,12 @@ public class MongoLogAppender extends AppenderBase<ILoggingEvent> {
      */
     @Override
     public void stop() {
+
+        if (!isStarted())
+            return;
+
         running = false;
+        executor.shutdownNow();
         super.stop();
     }
 
