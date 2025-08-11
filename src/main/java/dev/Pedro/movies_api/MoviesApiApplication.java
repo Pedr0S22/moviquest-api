@@ -9,8 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  *
  * <p>
  * This class is responsible for bootstrapping the Spring application context
- * and
- * launching the web backend server.
+ * and launching the web backend server.
  * </p>
  */
 @SpringBootApplication

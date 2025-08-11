@@ -1,8 +1,14 @@
 package dev.Pedro.movies_api.exception;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
@@ -12,7 +18,7 @@ import com.mongodb.MongoSocketException;
 import com.mongodb.MongoSocketReadTimeoutException;
 import com.mongodb.MongoTimeoutException;
 
-import dev.Pedro.movies_api.model.ApiResponse;
+import dev.Pedro.movies_api.dto.response.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
@@ -27,7 +33,7 @@ public class GlobalExceptionHandler {
                         MongoException.class,
                         DataAccessException.class
         })
-        public ResponseEntity<Object> handleMongoDatabaseError(Exception ex, HttpServletRequest request) {
+        public ResponseEntity<ApiResponse> handleMongoDatabaseError(Exception ex, HttpServletRequest request) {
                 log.error("Database error: {}", ex.getMessage(), ex);
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
@@ -38,7 +44,7 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(InvalidReviewCreationRequestException.class)
-        public ResponseEntity<Object> handleInvalidReviewCreationRequest(InvalidReviewCreationRequestException ex,
+        public ResponseEntity<ApiResponse> handleInvalidReviewCreationRequest(InvalidReviewCreationRequestException ex,
                         HttpServletRequest request) {
 
                 ApiResponse error = new ApiResponse(
@@ -50,7 +56,7 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(MovieNotFoundException.class)
-        public ResponseEntity<Object> handleMovieNotFound(MovieNotFoundException ex,
+        public ResponseEntity<ApiResponse> handleMovieNotFound(MovieNotFoundException ex,
                         HttpServletRequest request) {
 
                 ApiResponse error = new ApiResponse(
@@ -62,7 +68,8 @@ public class GlobalExceptionHandler {
         }
 
         @ExceptionHandler(NoResourceFoundException.class)
-        public ResponseEntity<Object> handleNoResourceFound(NoResourceFoundException ex, HttpServletRequest request) {
+        public ResponseEntity<ApiResponse> handleNoResourceFound(NoResourceFoundException ex,
+                        HttpServletRequest request) {
                 log.warn("No resource found for path: {}", request.getRequestURI());
 
                 ApiResponse error = new ApiResponse(
@@ -74,9 +81,86 @@ public class GlobalExceptionHandler {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
         }
 
+        @ExceptionHandler(UsernameNotFoundException.class)
+        public ResponseEntity<ApiResponse> handleUsernameNotFound(UsernameNotFoundException ex,
+                        HttpServletRequest request) {
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.NOT_FOUND.value(),
+                                "Username Not found",
+                                ex.getMessage(),
+                                request.getRequestURI());
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+
+        @ExceptionHandler(EmailAlreadyExistsException.class)
+        public ResponseEntity<ApiResponse> handleEmailInDB(EmailAlreadyExistsException ex, HttpServletRequest request) {
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.CONFLICT.value(),
+                                "Conflict resources with email",
+                                ex.getMessage(),
+                                request.getRequestURI());
+
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        }
+
+        @ExceptionHandler(UsernameAlreadyExistsException.class)
+        public ResponseEntity<ApiResponse> handleUsernameInDB(UsernameAlreadyExistsException ex,
+                        HttpServletRequest request) {
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.CONFLICT.value(),
+                                "Conflict resources with username",
+                                ex.getMessage(),
+                                request.getRequestURI());
+
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        }
+
+        @ExceptionHandler(RoleNotFoundException.class)
+        public ResponseEntity<ApiResponse> handleRoleNotFound(RoleNotFoundException ex, HttpServletRequest request) {
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.CONFLICT.value(),
+                                "Conflict with Role not found",
+                                ex.getMessage(),
+                                request.getRequestURI());
+
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+        }
+
+        @ExceptionHandler(MethodArgumentNotValidException.class)
+        public ResponseEntity<ApiResponse> handleArgumentsNotValid(MethodArgumentNotValidException ex,
+                        HttpServletRequest request) {
+
+                Map<String, String> errors = new HashMap<>();
+
+                ex.getBindingResult().getFieldErrors()
+                                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+
+                log.debug("Invalid Request came from client.");
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Bad Request",
+                                errors,
+                                request.getRequestURI());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+
+        @ExceptionHandler(BadCredentialsException.class)
+        public ResponseEntity<ApiResponse> handleArgumentsNotValid(BadCredentialsException ex,
+                        HttpServletRequest request) {
+
+                log.warn("Failed login attempt!");
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Bad Request",
+                                ex.getMessage(),
+                                request.getRequestURI());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+        }
+
         @ExceptionHandler(Exception.class)
-        public ResponseEntity<Object> handleGenericError(Exception ex, HttpServletRequest request) {
-                log.error("Unhandled server error: {}", ex.getMessage(), ex);
+        public ResponseEntity<ApiResponse> handleGenericError(Exception ex, HttpServletRequest request) {
+                log.error("Unhandled server error: {} - {}", ex.getMessage(), ex.getClass());
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.INTERNAL_SERVER_ERROR.value(),
                                 "Internal server error",
