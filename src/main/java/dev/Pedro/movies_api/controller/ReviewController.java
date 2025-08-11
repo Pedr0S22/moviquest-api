@@ -26,7 +26,7 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> createReview(@Valid @RequestBody NewReviewRequest newReview) {
+    public ResponseEntity<ApiResponse> createReview(@Valid @RequestBody NewReviewRequest newReview) {
 
         log.info("Creating Review for Movie with imdbId {}", newReview.getImdbId());
 
