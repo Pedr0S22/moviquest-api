@@ -17,8 +17,6 @@ public class ApiResponse {
     private LocalDateTime localDateTime;
     private String path;
 
-    private Object review;
-
     private Map<String, String> errorsMessage;
 
     public ApiResponse(int status, String errorType, String message, String path) {
@@ -37,9 +35,4 @@ public class ApiResponse {
         this.path = path;
     }
 
-    public ApiResponse(int status, String message, Object review) {
-        this.status = status;
-        this.message = message;
-        this.review = review;
-    }
 }

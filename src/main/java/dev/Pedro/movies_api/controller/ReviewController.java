@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.Pedro.movies_api.dto.request.NewReviewRequest;
-import dev.Pedro.movies_api.dto.response.ApiResponse;
+import dev.Pedro.movies_api.dto.response.NewReviewResponse;
 import dev.Pedro.movies_api.model.Review;
 import dev.Pedro.movies_api.service.ReviewService;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse> createReview(@Valid @RequestBody NewReviewRequest newReview) {
+    public ResponseEntity<NewReviewResponse> createReview(@Valid @RequestBody NewReviewRequest newReview) {
 
         log.info("Creating Review for Movie with imdbId {}", newReview.getImdbId());
 
@@ -36,7 +36,7 @@ public class ReviewController {
                 + newReview.getImdbId();
         log.info(successMessage);
 
-        ApiResponse response = new ApiResponse(
+        NewReviewResponse response = new NewReviewResponse(
                 HttpStatus.CREATED.value(),
                 successMessage,
                 review);
