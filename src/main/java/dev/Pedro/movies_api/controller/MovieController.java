@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import dev.Pedro.movies_api.dto.request.NewMovieRequest;
 import dev.Pedro.movies_api.dto.request.SearchMoviesRequest;
 import dev.Pedro.movies_api.dto.response.ApiResponse;
 import dev.Pedro.movies_api.model.Movie;
@@ -54,6 +55,7 @@ public class MovieController {
 
         log.info("Received request to search movies with filters: {}, {}, {}, {}", search.getTitle(),
                 search.getGenres(), search.getReleaseDateAfter(), search.getReleaseDateBefore());
+
         List<Movie> movies = movieService.searchMovies(search);
         log.info("Returning {} movies.", movies.size());
 
@@ -69,6 +71,17 @@ public class MovieController {
         log.info("The movie with imdbId {} was deleted", imdbId);
 
         return ResponseEntity.ok(deleteResponse);
+    }
+
+    @PostMapping("/newMovie")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Movie> insertMovie(@Valid @RequestBody NewMovieRequest newMovie) {
+
+        log.info("Received request to Insert a new movie with imdbId {}", newMovie.getImdbId());
+        Movie movie = movieService.saveMovie(newMovie);
+        log.info("The movie with imdbId {} was inserted", movie.getImdbId());
+
+        return ResponseEntity.ok(movie);
     }
 
 }

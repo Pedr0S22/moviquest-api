@@ -7,14 +7,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import dev.Pedro.movies_api.dto.request.NewMovieRequest;
 import dev.Pedro.movies_api.dto.request.SearchMoviesRequest;
 import dev.Pedro.movies_api.dto.response.ApiResponse;
+import dev.Pedro.movies_api.exception.MovieAlreadyExistsException;
 import dev.Pedro.movies_api.exception.MovieNotFoundException;
 import dev.Pedro.movies_api.model.Movie;
 import dev.Pedro.movies_api.repository.MovieRepository;
@@ -102,8 +105,6 @@ public class MovieService {
 
     public ApiResponse deleteMovieByImdbId(String imdbId, HttpServletRequest request) {
 
-        ApiResponse response;
-
         if (!verifyMovieExistence(imdbId)) {
             throw new MovieNotFoundException(
                     "The movie with imdbId " + imdbId + " was does not exist. Impossible to delete");
@@ -112,9 +113,24 @@ public class MovieService {
         movieRepository.deleteByImdbId(imdbId);
 
         String message = "The movie with imdbId " + imdbId + " was deleted";
-        response = new ApiResponse(HttpStatus.OK.value(), message, request.getRequestURI());
+        ApiResponse response = new ApiResponse(HttpStatus.OK.value(), message, request.getRequestURI());
 
         return response;
+    }
+
+    public Movie saveMovie(NewMovieRequest newMovie) {
+        if (verifyMovieExistence(newMovie.getImdbId())) {
+            throw new MovieAlreadyExistsException(
+                    "The movie with imdbId " + newMovie.getImdbId()
+                            + " already exists. Impossible to insert this new Movie");
+        }
+        Movie movie = new Movie(new ObjectId(), newMovie.getImdbId(), newMovie.getTitle(),
+                newMovie.getReleaseDate().toString(), newMovie.getTrailerLink(), newMovie.getPoster(),
+                newMovie.getGenres(), newMovie.getBackdrops(), null);
+
+        Movie movieInserted = movieRepository.save(movie);
+
+        return movieInserted;
     }
 
     public Boolean verifyMovieExistence(String imdbId) {
