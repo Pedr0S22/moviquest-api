@@ -35,4 +35,11 @@ public class ApiResponse {
         this.path = path;
     }
 
+    public ApiResponse(int status, String message, String path) {
+        this.status = status;
+        this.message = message;
+        this.localDateTime = LocalDateTime.now();
+        this.path = path;
+    }
+
 }
