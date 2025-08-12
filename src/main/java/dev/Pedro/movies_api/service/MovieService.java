@@ -1,10 +1,18 @@
 package dev.Pedro.movies_api.service;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import dev.Pedro.movies_api.dto.request.SearchMoviesRequest;
 import dev.Pedro.movies_api.exception.MovieNotFoundException;
 import dev.Pedro.movies_api.model.Movie;
 import dev.Pedro.movies_api.repository.MovieRepository;
@@ -15,9 +23,11 @@ import lombok.extern.slf4j.Slf4j;
 public class MovieService {
 
     private final MovieRepository movieRepository;
+    private final MongoTemplate mongoTemplate;
 
-    public MovieService(MovieRepository movieRepository) {
+    public MovieService(MovieRepository movieRepository, MongoTemplate mongoTemplate) {
         this.movieRepository = movieRepository;
+        this.mongoTemplate = mongoTemplate;
     }
 
     public List<Movie> AllMovies() {
@@ -36,6 +46,55 @@ public class MovieService {
 
             throw new MovieNotFoundException(errorMessage);
         }
+    }
+
+    public List<Movie> searchMovies(SearchMoviesRequest search) {
+
+        Query query = new Query();
+        List<Criteria> criteria = new ArrayList<>();
+        List<Movie> movies;
+
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
+        // fields
+        String title = search.getTitle();
+        Set<String> genres = search.getGenres();
+        Date releaseDateAfter = search.getReleaseDateAfter();
+        Date releaseDateBefore = search.getReleaseDateBefore();
+
+        if (title != null)
+            criteria.add(Criteria.where("title").regex(title, "i"));
+
+        if (genres != null && !genres.isEmpty())
+            criteria.add(Criteria.where("genres").in(genres));
+
+        if (releaseDateAfter != null && releaseDateBefore != null) {
+            criteria.add(
+                    Criteria.where("releaseDate")
+                            .gte(formatter.format(releaseDateAfter))
+                            .lte(formatter.format(releaseDateBefore)));
+
+        } else if (releaseDateAfter != null || releaseDateBefore != null) {
+
+            if (releaseDateAfter == null)
+                criteria.add(Criteria.where("releaseDate")
+                        .lte(formatter.format(releaseDateBefore)));
+            else
+                criteria.add(Criteria.where("releaseDate")
+                        .gte(formatter.format(releaseDateAfter)));
+        }
+
+        if (!criteria.isEmpty())
+            query.addCriteria(new Criteria().andOperator(criteria.toArray(new Criteria[0])));
+        else
+            log.info("No filters - returning all movies");
+        movies = movieRepository.findAll();
+
+        log.debug("Final query: {}", query.getQueryObject().toJson());
+
+        movies = mongoTemplate.find(query, Movie.class);
+
+        return movies;
     }
 
     public Boolean verifyMovieExistence(String imdbId) {
