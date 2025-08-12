@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import dev.Pedro.movies_api.dto.request.NewMovieRequest;
 import dev.Pedro.movies_api.dto.request.SearchMoviesRequest;
+import dev.Pedro.movies_api.dto.request.UpdateMovieRequest;
 import dev.Pedro.movies_api.dto.response.ApiResponse;
 import dev.Pedro.movies_api.exception.MovieAlreadyExistsException;
 import dev.Pedro.movies_api.exception.MovieNotFoundException;
@@ -131,6 +132,33 @@ public class MovieService {
         Movie movieInserted = movieRepository.save(movie);
 
         return movieInserted;
+    }
+
+    public Movie updateMovie(String imdbId, UpdateMovieRequest updMovie) {
+
+        Movie existingMovie = singleMovie(imdbId);
+
+        if (updMovie.getTitle() != null)
+            existingMovie.setTitle(updMovie.getTitle());
+
+        if (updMovie.getReleaseDate() != null)
+            existingMovie.setReleaseDate(updMovie.getReleaseDate().toString());
+
+        if (updMovie.getTrailerLink() != null)
+            existingMovie.setTrailerLink(updMovie.getTrailerLink());
+
+        if (updMovie.getPoster() != null)
+            existingMovie.setPoster(updMovie.getPoster());
+
+        if (updMovie.getGenres() != null)
+            existingMovie.setGenres(updMovie.getGenres());
+
+        if (updMovie.getBackdrops() != null)
+            existingMovie.setBackdrops(updMovie.getBackdrops());
+
+        Movie movie = movieRepository.save(existingMovie);
+
+        return movie;
     }
 
     public Boolean verifyMovieExistence(String imdbId) {
