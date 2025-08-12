@@ -163,11 +163,13 @@ public class GlobalExceptionHandler {
         @ExceptionHandler(HttpMessageNotReadableException.class)
         public ResponseEntity<ApiResponse> handleBadNameRequest(HttpMessageNotReadableException ex,
                         HttpServletRequest request) {
-                log.error("Error in request body. Variable key name typed wrongly: {}", ex.getMessage());
+                log.error("Error in request body. Variable key or value typed wrongly or not formatted correctly: {}",
+                                ex.getMessage());
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.BAD_REQUEST.value(),
                                 "Bad Request",
-                                "Error in request body. Variable key name typed wrongly: " + ex.getMessage(),
+                                "Error in request body. Variable key or value typed wrongly or not formatted correctly: "
+                                                + ex.getMessage(),
                                 request.getRequestURI());
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
         }
@@ -175,13 +177,25 @@ public class GlobalExceptionHandler {
         @ExceptionHandler(AuthorizationDeniedException.class)
         public ResponseEntity<ApiResponse> handleAuthorizationDenied(AuthorizationDeniedException ex,
                         HttpServletRequest request) {
-                log.error("Access denied to endpoint: {}", ex.getMessage());
+                log.debug("Access denied to endpoint: {}", ex.getMessage());
                 ApiResponse error = new ApiResponse(
                                 HttpStatus.UNAUTHORIZED.value(),
                                 "Unauthorized",
                                 "Access denied to endpoint: " + ex.getMessage(),
                                 request.getRequestURI());
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+        }
+
+        @ExceptionHandler(MovieAlreadyExistsException.class)
+        public ResponseEntity<ApiResponse> handleMovieAlreadyExists(MovieAlreadyExistsException ex,
+                        HttpServletRequest request) {
+                log.debug(ex.getMessage());
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.BAD_REQUEST.value(),
+                                "Bad Request",
+                                ex.getMessage(),
+                                request.getRequestURI());
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
         @ExceptionHandler(Exception.class)
