@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -169,6 +170,18 @@ public class GlobalExceptionHandler {
                                 "Error in request body. Variable key name typed wrongly: " + ex.getMessage(),
                                 request.getRequestURI());
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+        }
+
+        @ExceptionHandler(AuthorizationDeniedException.class)
+        public ResponseEntity<ApiResponse> handleAuthorizationDenied(AuthorizationDeniedException ex,
+                        HttpServletRequest request) {
+                log.error("Access denied to endpoint: {}", ex.getMessage());
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.UNAUTHORIZED.value(),
+                                "Unauthorized",
+                                "Access denied to endpoint: " + ex.getMessage(),
+                                request.getRequestURI());
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
         }
 
         @ExceptionHandler(Exception.class)
