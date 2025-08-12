@@ -10,12 +10,15 @@ import java.util.Set;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import dev.Pedro.movies_api.dto.request.SearchMoviesRequest;
+import dev.Pedro.movies_api.dto.response.ApiResponse;
 import dev.Pedro.movies_api.exception.MovieNotFoundException;
 import dev.Pedro.movies_api.model.Movie;
 import dev.Pedro.movies_api.repository.MovieRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
@@ -95,6 +98,23 @@ public class MovieService {
         movies = mongoTemplate.find(query, Movie.class);
 
         return movies;
+    }
+
+    public ApiResponse deleteMovieByImdbId(String imdbId, HttpServletRequest request) {
+
+        ApiResponse response;
+
+        if (!verifyMovieExistence(imdbId)) {
+            throw new MovieNotFoundException(
+                    "The movie with imdbId " + imdbId + " was does not exist. Impossible to delete");
+        }
+
+        movieRepository.deleteByImdbId(imdbId);
+
+        String message = "The movie with imdbId " + imdbId + " was deleted";
+        response = new ApiResponse(HttpStatus.OK.value(), message, request.getRequestURI());
+
+        return response;
     }
 
     public Boolean verifyMovieExistence(String imdbId) {
