@@ -171,7 +171,7 @@ public class GlobalExceptionHandler {
                                 "Error in request body. Variable key or value typed wrongly or not formatted correctly: "
                                                 + ex.getMessage(),
                                 request.getRequestURI());
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(error);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
         @ExceptionHandler(AuthorizationDeniedException.class)
