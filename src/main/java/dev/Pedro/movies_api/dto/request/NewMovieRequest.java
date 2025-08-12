@@ -13,6 +13,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Null;
+import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
 
 @Data
@@ -27,6 +28,7 @@ public class NewMovieRequest {
     @NotNull
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(pattern = "yyyy-MM-dd")
+    @PastOrPresent
     private LocalDate releaseDate;
 
     @Nullable
