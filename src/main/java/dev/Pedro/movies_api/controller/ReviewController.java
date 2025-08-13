@@ -2,13 +2,16 @@ package dev.Pedro.movies_api.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.Pedro.movies_api.dto.request.NewReviewRequest;
-import dev.Pedro.movies_api.dto.response.NewReviewResponse;
+import dev.Pedro.movies_api.dto.response.ReviewResponse;
 import dev.Pedro.movies_api.model.Review;
 import dev.Pedro.movies_api.service.ReviewService;
 import jakarta.validation.Valid;
@@ -26,7 +29,7 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<NewReviewResponse> createReview(@Valid @RequestBody NewReviewRequest newReview) {
+    public ResponseEntity<ReviewResponse> createReview(@Valid @RequestBody NewReviewRequest newReview) {
 
         log.info("Creating Review for Movie with imdbId {}", newReview.getImdbId());
 
@@ -36,7 +39,7 @@ public class ReviewController {
                 + newReview.getImdbId();
         log.info(successMessage);
 
-        NewReviewResponse response = new NewReviewResponse(
+        ReviewResponse response = new ReviewResponse(
                 HttpStatus.CREATED.value(),
                 successMessage,
                 review);
@@ -44,7 +47,23 @@ public class ReviewController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    // Update review Idea: @PreAuthorize("#review.authorId ==
-    // authentication.principal.id or hasRole('ADMIN')")
+    @DeleteMapping("/delete/{imdbId}/{id}")
+    @PreAuthorize("@reviewSecurity.isOwner(#id) or hasRole('ADMIN')")
+    public ResponseEntity<ReviewResponse> deleteReview(@PathVariable String imdbId, @PathVariable String id) {
+
+        log.info("Received request to Delete review with id {}, from Movie with imdbId {}", id, imdbId);
+
+        reviewService.deleteReview(imdbId, id);
+
+        String successMessage = "The review with id " + id + " from movie with imdbId " + imdbId
+                + " was deleted successfully";
+        log.info(successMessage);
+
+        ReviewResponse response = new ReviewResponse(
+                HttpStatus.OK.value(),
+                successMessage);
+
+        return ResponseEntity.ok(response);
+    }
 
 }
