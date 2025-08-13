@@ -179,11 +179,11 @@ public class GlobalExceptionHandler {
                         HttpServletRequest request) {
                 log.debug("Access denied to endpoint: {}", ex.getMessage());
                 ApiResponse error = new ApiResponse(
-                                HttpStatus.UNAUTHORIZED.value(),
-                                "Unauthorized",
+                                HttpStatus.FORBIDDEN.value(),
+                                "Forbidden",
                                 "Access denied to endpoint: " + ex.getMessage(),
                                 request.getRequestURI());
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(error);
         }
 
         @ExceptionHandler(MovieAlreadyExistsException.class)
