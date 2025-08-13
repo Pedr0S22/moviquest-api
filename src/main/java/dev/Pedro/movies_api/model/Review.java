@@ -22,7 +22,10 @@ public class Review {
     private ObjectId id;
     private String body;
 
-    public Review(String body) {
+    private String author;
+
+    public Review(String body, String author) {
         this.body = body;
+        this.author = author;
     }
 }
