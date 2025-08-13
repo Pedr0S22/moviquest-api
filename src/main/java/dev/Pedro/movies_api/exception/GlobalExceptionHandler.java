@@ -198,6 +198,18 @@ public class GlobalExceptionHandler {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
         }
 
+        @ExceptionHandler(ReviewNotFoundException.class)
+        public ResponseEntity<ApiResponse> handleReviewNotFound(ReviewNotFoundException ex,
+                        HttpServletRequest request) {
+                ApiResponse error = new ApiResponse(
+                                HttpStatus.NOT_FOUND.value(),
+                                "Not Found",
+                                ex.getMessage(),
+                                request.getRequestURI());
+
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+        }
+
         @ExceptionHandler(Exception.class)
         public ResponseEntity<ApiResponse> handleGenericError(Exception ex, HttpServletRequest request) {
                 log.error("Unhandled server error: {} - {}", ex.getMessage(), ex.getClass());
