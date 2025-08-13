@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Data
-public class NewReviewRequest {
+public class ReviewRequest {
 
     @NotBlank
     private String imdbId;
