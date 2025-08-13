@@ -4,13 +4,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import dev.Pedro.movies_api.dto.request.NewReviewRequest;
+import dev.Pedro.movies_api.dto.request.ReviewRequest;
 import dev.Pedro.movies_api.dto.response.ReviewResponse;
 import dev.Pedro.movies_api.model.Review;
 import dev.Pedro.movies_api.service.ReviewService;
@@ -29,7 +30,7 @@ public class ReviewController {
     }
 
     @PostMapping
-    public ResponseEntity<ReviewResponse> createReview(@Valid @RequestBody NewReviewRequest newReview) {
+    public ResponseEntity<ReviewResponse> createReview(@Valid @RequestBody ReviewRequest newReview) {
 
         log.info("Creating Review for Movie with imdbId {}", newReview.getImdbId());
 
@@ -51,7 +52,7 @@ public class ReviewController {
     @PreAuthorize("@reviewSecurity.isOwner(#id) or hasRole('ADMIN')")
     public ResponseEntity<ReviewResponse> deleteReview(@PathVariable String imdbId, @PathVariable String id) {
 
-        log.info("Received request to Delete review with id {}, from Movie with imdbId {}", id, imdbId);
+        log.info("Received request to DELETE review with id {}, from Movie with imdbId {}", id, imdbId);
 
         reviewService.deleteReview(imdbId, id);
 
@@ -62,6 +63,25 @@ public class ReviewController {
         ReviewResponse response = new ReviewResponse(
                 HttpStatus.OK.value(),
                 successMessage);
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PatchMapping("/update/{id}")
+    @PreAuthorize("@reviewSecurity.isOwner(#id)")
+    public ResponseEntity<ReviewResponse> updateReview(@PathVariable String id,
+            @Valid @RequestBody ReviewRequest reviewRequest) {
+
+        log.info("Received request to UPDATE review with id {}, from Movie with imdbId {}", id,
+                reviewRequest.getImdbId());
+
+        Review review = reviewService.updateReview(reviewRequest, id);
+
+        String successMessage = "The review with id " + id + " from movie with imdbId " + reviewRequest.getImdbId()
+                + " was updated successfully";
+        log.info(successMessage);
+
+        ReviewResponse response = new ReviewResponse(HttpStatus.OK.value(), successMessage, review);
 
         return ResponseEntity.ok(response);
     }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 
 import dev.Pedro.movies_api.model.Movie;
 import dev.Pedro.movies_api.model.Review;
-import dev.Pedro.movies_api.dto.request.NewReviewRequest;
+import dev.Pedro.movies_api.dto.request.ReviewRequest;
 import dev.Pedro.movies_api.exception.*;
 import dev.Pedro.movies_api.repository.ReviewRepository;
 import dev.Pedro.movies_api.security.service.UserDetailsImpl;
@@ -38,7 +38,7 @@ public class ReviewService {
         this.movieRepository = movieRepository;
     }
 
-    public Review createReview(NewReviewRequest newReview) {
+    public Review createReview(ReviewRequest newReview) {
 
         if (!movieService.verifyMovieExistence(newReview.getImdbId())) {
 
@@ -70,10 +70,8 @@ public class ReviewService {
 
         if (verifyReviewExistence(id)) {
 
-            log.debug("antes");
             // verify if that review exists in that movie and removes it
             boolean removed = movie.getReviewIds().removeIf(review -> review.getId().toHexString().equals(id));
-            log.debug("depois");
 
             if (!removed)
                 throw new ReviewNotFoundException(
@@ -84,7 +82,27 @@ public class ReviewService {
         } else
             throw new ReviewNotFoundException(
                     "Review with id " + id + " not found");
+    }
 
+    public Review updateReview(ReviewRequest reviewRequest, String id) {
+
+        // Check movie existence and retrieve it
+        Movie movie = movieService.singleMovie(reviewRequest.getImdbId());
+
+        // Check if review belongs to this movie
+        boolean reviewInMovie = movie.getReviewIds().stream()
+                .anyMatch(r -> r.getId().toHexString().equals(id));
+        if (!reviewInMovie)
+            throw new ReviewNotFoundException(
+                    "Review with id " + id + " not found in movie with imdbId " + reviewRequest.getImdbId());
+
+        // verify if that review exists in that movie and retrieves it
+        Review review = reviewRepository.findById(new ObjectId(id))
+                .orElseThrow(() -> new ReviewNotFoundException("Review with id " + id + " not found"));
+
+        review.setBody(reviewRequest.getBody());
+
+        return reviewRepository.save(review);
     }
 
     private boolean verifyReviewExistence(String id) {
