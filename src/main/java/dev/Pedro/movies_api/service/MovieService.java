@@ -161,12 +161,7 @@ public class MovieService {
         return movie;
     }
 
-    public Boolean verifyMovieExistence(String imdbId) {
-        Optional<Movie> movie = movieRepository.findMovieByImdbId(imdbId);
-
-        if (movie.isPresent())
-            return true;
-        else
-            return false;
+    public boolean verifyMovieExistence(String imdbId) {
+        return movieRepository.existsByImdbId(imdbId);
     }
 }

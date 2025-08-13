@@ -13,4 +13,6 @@ public interface MovieRepository extends MongoRepository<Movie, ObjectId> {
     public Optional<Movie> findMovieByImdbId(String imdbId);
 
     public void deleteByImdbId(String imdbId);
+
+    public boolean existsByImdbId(String imdbId);
 }
