@@ -16,8 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-//import dev.Pedro.movies_api.logging.MongoLogAppender;
-
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/logging")
