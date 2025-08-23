@@ -68,7 +68,7 @@ public class ReviewService {
 
         Movie movie = movieService.singleMovie(imdbId);
 
-        if (verifyReviewExistence(id)) {
+        if (reviewRepository.existsById(new ObjectId(id))) {
 
             // verify if that review exists in that movie and removes it
             boolean removed = movie.getReviewIds().removeIf(review -> review.getId().toHexString().equals(id));
@@ -105,7 +105,4 @@ public class ReviewService {
         return reviewRepository.save(review);
     }
 
-    private boolean verifyReviewExistence(String id) {
-        return reviewRepository.existsById(new ObjectId(id));
-    }
 }
