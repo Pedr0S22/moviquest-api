@@ -15,6 +15,15 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import dev.Pedro.movies_api.model.User;
 import lombok.AllArgsConstructor;
 
+/**
+ * Implementation of Spring Security's {@link UserDetails} interface.
+ * <p>
+ * Represents an authenticated user with their username, email, password, and
+ * authorities (roles).
+ * This class is used by Spring Security for authentication and authorization
+ * checks.
+ * </p>
+ */
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
 
@@ -29,6 +38,15 @@ public class UserDetailsImpl implements UserDetails {
 
     private Collection<? extends GrantedAuthority> authorities; // roles
 
+    /**
+     * Builds a {@link UserDetailsImpl} object from a {@link User} entity.
+     * <p>
+     * Maps the user's roles to Spring Security {@link GrantedAuthority}.
+     * </p>
+     *
+     * @param user the {@link User} entity
+     * @return a new {@link UserDetailsImpl} instance
+     */
     public static UserDetailsImpl build(User user) {
         // Map the roles of the user to GrantedAuthority
         List<GrantedAuthority> authorities = user.getRoles().stream()
@@ -87,6 +105,12 @@ public class UserDetailsImpl implements UserDetails {
         return true; // Account is enabled
     }
 
+    /**
+     * Compares two {@link UserDetailsImpl} objects based on user ID.
+     *
+     * @param obj the other object to compare
+     * @return {@code true} if the IDs are equal, {@code false} otherwise
+     */
     @Override
     public boolean equals(Object obj) {
         if (this == obj)
