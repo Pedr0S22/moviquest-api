@@ -18,6 +18,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+/**
+ * Controller that handles authentication-related endpoints such as login and
+ * signup.
+ * <p>
+ * It delegates the actual authentication logic to the {@link AuthService} and
+ * builds appropriate responses for the client.
+ * </p>
+ */
 @RestController
 @Slf4j
 @RequestMapping("/api/v1/auth")
@@ -25,10 +33,30 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * Creates a new {@code AuthController} with the required authentication
+     * service.
+     *
+     * @param authService the service responsible for handling authentication and
+     *                    registration
+     */
     public AuthController(AuthService authService) {
         this.authService = authService;
     }
 
+    /**
+     * Handles user login requests.
+     * <p>
+     * Validates the given login request, delegates authentication to
+     * {@link AuthService},
+     * and returns a {@link JwtResponse} containing the JWT token and user details
+     * if authentication is successful.
+     * </p>
+     *
+     * @param login the login request containing username and password
+     * @return a {@code ResponseEntity} containing the {@link JwtResponse} with JWT
+     *         details
+     */
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> handleLogin(@Valid @RequestBody LoginRequest login) {
 
@@ -39,6 +67,20 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Handles user signup (registration) requests.
+     * <p>
+     * Validates the signup request, registers the user through {@link AuthService},
+     * and constructs a {@link JwtResponse} containing the new user's details,
+     * roles,
+     * and a success message.
+     * </p>
+     *
+     * @param signup the signup request containing user registration data
+     * @return a {@code ResponseEntity} containing the {@link JwtResponse} with
+     *         registration details,
+     *         returned with HTTP status {@code 201 CREATED}
+     */
     @PostMapping("/signup")
     public ResponseEntity<JwtResponse> handleSignup(@Valid @RequestBody SignupRequest signup) {
 
