@@ -18,6 +18,15 @@ import dev.Pedro.movies_api.security.jwt.AuthTokenFilter;
 import dev.Pedro.movies_api.security.jwt.JwtUtils;
 import dev.Pedro.movies_api.security.service.UserDetailsServiceImpl;
 
+/**
+ * Configuration class for Spring Security.
+ * <p>
+ * Sets up authentication, authorization, JWT token filtering, password
+ * encoding,
+ * and session management. Enables method-level security annotations with
+ * {@code @EnableMethodSecurity}.
+ * </p>
+ */
 @Configuration
 @EnableMethodSecurity
 public class WebSecurityConfig {
@@ -27,6 +36,16 @@ public class WebSecurityConfig {
     private final AccessDeniedHandlerJwt accessDeniedJwt;
     private final JwtUtils jwtUtils;
 
+    /**
+     * Constructs the security configuration with required dependencies.
+     *
+     * @param userDetailsService the service used to load user details for
+     *                           authentication
+     * @param entryPointJwt      handles unauthorized access attempts
+     * @param accessDeniedJwt    handles forbidden access attempts
+     * @param jwtUtils           utility class for generating and validating JWT
+     *                           tokens
+     */
     public WebSecurityConfig(UserDetailsServiceImpl userDetailsService, AuthEntryPointJwt entryPointJwt,
             AccessDeniedHandlerJwt accessDeniedJwt, JwtUtils jwtUtils) {
 
@@ -36,21 +55,56 @@ public class WebSecurityConfig {
         this.jwtUtils = jwtUtils;
     }
 
+    /**
+     * Bean for the JWT authentication token filter.
+     * <p>
+     * Intercepts requests to validate JWT tokens and authenticate users.
+     * </p>
+     *
+     * @return a configured {@link AuthTokenFilter} bean
+     */
     @Bean
     public AuthTokenFilter authenticationJwtTokenFilter() {
         return new AuthTokenFilter(jwtUtils, userDetailsService);
     }
 
+    /**
+     * Exposes the {@link AuthenticationManager} bean for authentication purposes.
+     *
+     * @param authConfig the authentication configuration
+     * @return the authentication manager
+     * @throws Exception if the authentication manager cannot be built
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();
     }
 
+    /**
+     * Bean for password encoding.
+     * <p>
+     * Uses {@link BCryptPasswordEncoder} to hash passwords securely.
+     * </p>
+     *
+     * @return a {@link PasswordEncoder} bean
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures the HTTP security filter chain.
+     * <p>
+     * Disables CSRF, sets session management to stateless, configures exception
+     * handling for unauthorized and forbidden requests, sets route-based
+     * authorization rules, and adds the JWT token filter.
+     * </p>
+     *
+     * @param http the {@link HttpSecurity} object to configure
+     * @return a built {@link SecurityFilterChain} bean
+     * @throws Exception if there is a configuration error
+     */
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         // Configure CSRF protection, exception handling, session management, and
