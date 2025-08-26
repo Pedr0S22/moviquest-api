@@ -18,6 +18,17 @@ import lombok.extern.slf4j.Slf4j;
 
 import dev.Pedro.movies_api.repository.MovieRepository;
 
+/**
+ * Service class responsible for handling Review operations.
+ * <p>
+ * This class provides methods to create, update, and delete reviews for movies.
+ * It interacts with {@link MovieService}, {@link ReviewRepository}, and
+ * {@link MongoTemplate}
+ * to ensure proper association of reviews with movies.
+ * <p>
+ * Security is enforced externally using {@link ReviewSecurity} to verify
+ * ownership of reviews.
+ */
 @Service
 @Slf4j
 public class ReviewService {
@@ -30,6 +41,14 @@ public class ReviewService {
 
     private final MongoTemplate mongoTemplate;
 
+    /**
+     * Constructs the ReviewService with required repositories and services.
+     *
+     * @param reviewRepository the repository for persisting reviews
+     * @param movieService     the service for managing movies
+     * @param mongoTemplate    the MongoTemplate for advanced queries and updates
+     * @param movieRepository  the repository for managing movies
+     */
     public ReviewService(ReviewRepository reviewRepository, MovieService movieService, MongoTemplate mongoTemplate,
             MovieRepository movieRepository) {
         this.reviewRepository = reviewRepository;
@@ -38,6 +57,23 @@ public class ReviewService {
         this.movieRepository = movieRepository;
     }
 
+    /**
+     * Creates a new review and associates it with the specified movie.
+     * <p>
+     * Steps performed:
+     * <ul>
+     * <li>Checks if the movie exists</li>
+     * <li>Creates a new review with the currently authenticated user as the
+     * author</li>
+     * <li>Inserts the review into the database</li>
+     * <li>Pushes the review ID into the corresponding movie's {@code reviewIds}
+     * list</li>
+     * </ul>
+     *
+     * @param newReview the request containing review body and movie IMDb ID
+     * @return the created {@link Review} object
+     * @throws MovieNotFoundException if the target movie does not exist
+     */
     public Review createReview(ReviewRequest newReview) {
 
         if (!movieService.verifyMovieExistence(newReview.getImdbId())) {
@@ -64,6 +100,22 @@ public class ReviewService {
         return review;
     }
 
+    /**
+     * Deletes a review and removes its reference from the associated movie.
+     * <p>
+     * Steps performed:
+     * <ul>
+     * <li>Verifies the movie exists</li>
+     * <li>Checks if the review belongs to the movie</li>
+     * <li>Removes the review ID from the movie's {@code reviewIds} list</li>
+     * <li>Deletes the review from the database</li>
+     * </ul>
+     *
+     * @param imdbId the IMDb ID of the movie
+     * @param id     the ID of the review to delete
+     * @throws ReviewNotFoundException if the review does not exist or does not
+     *                                 belong to the movie
+     */
     public void deleteReview(String imdbId, String id) {
 
         Movie movie = movieService.singleMovie(imdbId);
@@ -84,6 +136,24 @@ public class ReviewService {
                     "Review with id " + id + " not found");
     }
 
+    /**
+     * Updates the content of a review.
+     * <p>
+     * Steps performed:
+     * <ul>
+     * <li>Verifies the movie exists</li>
+     * <li>Checks if the review belongs to the movie</li>
+     * <li>Updates the review body</li>
+     * <li>Saves the updated review in the database</li>
+     * </ul>
+     *
+     * @param reviewRequest the request containing the new review body and movie
+     *                      IMDb ID
+     * @param id            the ID of the review to update
+     * @return the updated {@link Review} object
+     * @throws ReviewNotFoundException if the review does not exist or does not
+     *                                 belong to the movie
+     */
     public Review updateReview(ReviewRequest reviewRequest, String id) {
 
         // Check movie existence and retrieve it

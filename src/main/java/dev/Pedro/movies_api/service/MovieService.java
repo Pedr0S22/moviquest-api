@@ -25,6 +25,11 @@ import dev.Pedro.movies_api.repository.MovieRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service class responsible for managing {@link Movie} entities.
+ * <p>
+ * Provides CRUD operations, search functionality, and validation.
+ */
 @Service
 @Slf4j
 public class MovieService {
@@ -32,15 +37,33 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MongoTemplate mongoTemplate;
 
+    /**
+     * Constructs the MovieService with required dependencies.
+     *
+     * @param movieRepository repository for CRUD operations on movies
+     * @param mongoTemplate   template for advanced MongoDB queries
+     */
     public MovieService(MovieRepository movieRepository, MongoTemplate mongoTemplate) {
         this.movieRepository = movieRepository;
         this.mongoTemplate = mongoTemplate;
     }
 
+    /**
+     * Retrieves all movies from the database.
+     *
+     * @return a list of all {@link Movie} objects
+     */
     public List<Movie> AllMovies() {
         return movieRepository.findAll();
     }
 
+    /**
+     * Retrieves a single movie by its imdbId.
+     *
+     * @param imdbId the imdbId of the movie
+     * @return the matching {@link Movie}
+     * @throws MovieNotFoundException if the movie does not exist
+     */
     public Movie singleMovie(String imdbId) {
 
         Optional<Movie> movie = movieRepository.findMovieByImdbId(imdbId);
@@ -55,6 +78,15 @@ public class MovieService {
         }
     }
 
+    /**
+     * Searches for movies based on the provided filters.
+     * <p>
+     * Supports filtering by title (case-insensitive), genres, and release date
+     * range.
+     *
+     * @param search the search criteria
+     * @return a list of matching {@link Movie} objects
+     */
     public List<Movie> searchMovies(SearchMoviesRequest search) {
 
         Query query = new Query();
@@ -104,6 +136,14 @@ public class MovieService {
         return movies;
     }
 
+    /**
+     * Deletes a movie by imdbId.
+     *
+     * @param imdbId  the imdbId of the movie
+     * @param request the current HTTP request, used for URI in the response
+     * @return an {@link ApiResponse} indicating success
+     * @throws MovieNotFoundException if the movie does not exist
+     */
     public ApiResponse deleteMovieByImdbId(String imdbId, HttpServletRequest request) {
 
         if (!verifyMovieExistence(imdbId)) {
@@ -119,6 +159,14 @@ public class MovieService {
         return response;
     }
 
+    /**
+     * Saves a new movie in the database.
+     *
+     * @param newMovie the movie details to save
+     * @return the saved {@link Movie}
+     * @throws MovieAlreadyExistsException if a movie with the same imdbId already
+     *                                     exists
+     */
     public Movie saveMovie(NewMovieRequest newMovie) {
         if (verifyMovieExistence(newMovie.getImdbId())) {
             throw new MovieAlreadyExistsException(
@@ -134,6 +182,16 @@ public class MovieService {
         return movieInserted;
     }
 
+    /**
+     * Updates an existing movie by imdbId.
+     * <p>
+     * Only fields that are not null in {@link UpdateMovieRequest} will be updated.
+     *
+     * @param imdbId   the imdbId of the movie to update
+     * @param updMovie the fields to update
+     * @return the updated {@link Movie}
+     * @throws MovieNotFoundException if the movie does not exist
+     */
     public Movie updateMovie(String imdbId, UpdateMovieRequest updMovie) {
 
         Movie existingMovie = singleMovie(imdbId);
@@ -161,6 +219,12 @@ public class MovieService {
         return movie;
     }
 
+    /**
+     * Checks whether a movie with the given imdbId exists.
+     *
+     * @param imdbId the imdbId to check
+     * @return true if the movie exists, false otherwise
+     */
     public boolean verifyMovieExistence(String imdbId) {
         return movieRepository.existsByImdbId(imdbId);
     }

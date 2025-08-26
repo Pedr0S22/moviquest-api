@@ -28,6 +28,14 @@ import dev.Pedro.movies_api.security.jwt.JwtUtils;
 import dev.Pedro.movies_api.security.service.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Service for handling authentication and user registration.
+ * <p>
+ * Provides methods to handle user login and signup, including password
+ * encoding,
+ * role assignment, and JWT token generation.
+ * </p>
+ */
 @Service
 @Slf4j
 public class AuthService {
@@ -38,6 +46,15 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
+    /**
+     * Constructs the authentication service with required dependencies.
+     *
+     * @param userRepository        repository to manage users
+     * @param roleRepository        repository to manage roles
+     * @param encoder               password encoder for storing hashed passwords
+     * @param authenticationManager manager to authenticate login credentials
+     * @param jwtUtils              utility to generate and validate JWT tokens
+     */
     public AuthService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder encoder,
             AuthenticationManager authenticationManager, JwtUtils jwtUtils) {
         this.userRepository = userRepository;
@@ -47,6 +64,12 @@ public class AuthService {
         this.jwtUtils = jwtUtils;
     }
 
+    /**
+     * Authenticates a user and generates a JWT token.
+     *
+     * @param login the {@link LoginRequest} containing username and password
+     * @return a {@link JwtResponse} containing JWT token, user info, and roles
+     */
     public JwtResponse handleLoginService(LoginRequest login) {
 
         // Authenticate the user with the provided username and password
@@ -77,6 +100,17 @@ public class AuthService {
         return response;
     }
 
+    /**
+     * Registers a new user and assigns roles.
+     *
+     * @param signup the {@link SignupRequest} containing user info and optional
+     *               roles
+     * @return the saved {@link User} entity
+     * @throws UsernameAlreadyExistsException if the username already exists
+     * @throws EmailAlreadyExistsException    if the email already exists
+     * @throws RoleNotFoundException          if any specified role does not exist
+     *                                        in the database
+     */
     public User handleSignupService(SignupRequest signup) {
 
         // Verify if username exists in database
@@ -128,6 +162,14 @@ public class AuthService {
         return user;
     }
 
+    /**
+     * Checks if a role exists in the database and adds it to the user's roles set.
+     * If the role is ADMIN, ensures that USER role is also added.
+     *
+     * @param clientRole the {@link ClientRoles} to check and add
+     * @param roles      the set of roles to update
+     * @throws RoleNotFoundException if the role does not exist in the database
+     */
     private void checkRoleExistenceAndAddRoles(ClientRoles clientRole, Set<Role> roles) {
         Optional<Role> userRole = roleRepository.findByRoleName(clientRole);
         if (userRole.isPresent()) {
@@ -141,6 +183,13 @@ public class AuthService {
         }
     }
 
+    /**
+     * Adds a role to the roles set if it is not already present.
+     *
+     * @param clientRole the {@link ClientRoles} to add
+     * @param roles      the set of roles to update
+     * @throws RoleNotFoundException if the role does not exist in the database
+     */
     private void addRoleIfMissing(ClientRoles clientRole, Set<Role> roles) {
 
         boolean hasRole = roles.stream().anyMatch(role -> role.getRoleName().equals(clientRole));

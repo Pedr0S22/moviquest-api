@@ -24,13 +24,16 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 /**
- * Service class responsible for saving log events into MongoDB.
- * This class uses Resilience4j annotations to apply fault tolerance mechanisms:
+ * Service responsible for saving and querying log events in MongoDB.
+ * <p>
+ * Provides:
  * <ul>
- * <li>{@code Retry:} retries saving if an exception occurs.</li>
- * <li>{@code CircuitBreaker:} stops requests temporarily if failures exceed a
- * threshold.</li>
- * <li>{@code TimeLimiter: enforces a maximum timeout for save operations.}</li>
+ * <li>Asynchronous log persistence with Resilience4j fault tolerance mechanisms
+ * (Retry, CircuitBreaker, TimeLimiter).</li>
+ * <li>Search functionality using flexible filters including log level,
+ * timestamp, thread, logger, MDC, and keywords.</li>
+ * <li>Fallback handling that requeues logs in a buffer when persistence
+ * fails.</li>
  * </ul>
  */
 @Service
@@ -84,6 +87,24 @@ public class LoggingService {
         return CompletableFuture.completedFuture(null);
     }
 
+    /**
+     * Searches MongoDB for logs matching filters specified in
+     * {@link SearchLogRequest}.
+     * <p>
+     * Supports filtering by:
+     * <ul>
+     * <li>Log level</li>
+     * <li>Timestamp range</li>
+     * <li>Thread</li>
+     * <li>Logger</li>
+     * <li>MDC (Mapped Diagnostic Context)</li>
+     * <li>Message keywords (case-insensitive)</li>
+     * </ul>
+     * Can optionally sort results by timestamp.
+     *
+     * @param logRequest the search criteria
+     * @return a list of matching {@link Document} objects from MongoDB
+     */
     public List<Document> searchLogs(SearchLogRequest logRequest) {
 
         List<Criteria> criteriaList = new ArrayList<>();
@@ -145,6 +166,12 @@ public class LoggingService {
         return mongoTemplate.find(query, Document.class, "logEvents");
     }
 
+    /**
+     * Converts a {@link LocalDateTime} to a UTC {@link Date}.
+     *
+     * @param ldt the LocalDateTime to convert
+     * @return a Date object representing the same instant in UTC
+     */
     private Date toDateUTC(LocalDateTime ldt) {
         return Date.from(ldt.toInstant(ZoneOffset.UTC));
     }
