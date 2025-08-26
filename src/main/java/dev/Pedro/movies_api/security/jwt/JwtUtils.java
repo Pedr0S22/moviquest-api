@@ -17,6 +17,14 @@ import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Utility class for generating, parsing, and validating JWT tokens.
+ * <p>
+ * Provides methods to create JWTs with expiration, extract the username from a
+ * token,
+ * and validate a token's signature and structure.
+ * </p>
+ */
 @Component
 @Slf4j
 public class JwtUtils {
@@ -24,11 +32,24 @@ public class JwtUtils {
     private final String jwtSecret;
     private final long jwtExpirationMs;
 
+    /**
+     * Constructs the utility with security configuration variables.
+     *
+     * @param jwtVars the {@link SecurityVariables} containing the JWT secret and
+     *                expiration time
+     */
     public JwtUtils(SecurityVariables jwtVars) {
         this.jwtSecret = jwtVars.getJwtSecret();
         this.jwtExpirationMs = jwtVars.getJwtExpirationMs();
     }
 
+    /**
+     * Generates a JWT token for a given authenticated user.
+     *
+     * @param authentication the {@link Authentication} object containing the user
+     *                       details
+     * @return a signed JWT string with subject, issued date, and expiration
+     */
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
@@ -40,11 +61,22 @@ public class JwtUtils {
                 .compact();
     }
 
+    /**
+     * Builds a {@link SecretKey} from the configured JWT secret.
+     *
+     * @return the secret key used for signing and verifying JWT tokens
+     */
     private SecretKey key() {
         // Decode the JWT secret and create a signing key
         return Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
     }
 
+    /**
+     * Extracts the username (subject) from a JWT token.
+     *
+     * @param token the JWT token string
+     * @return the username contained in the token's subject
+     */
     public String getUserNameFromJwtToken(String token) {
         // Parse the JWT token and return the subject (username)
         return Jwts.parser()
@@ -55,6 +87,16 @@ public class JwtUtils {
                 .getSubject();
     }
 
+    /**
+     * Validates a JWT token.
+     * <p>
+     * Checks the token's signature, expiration, and structure.
+     * Logs errors for invalid, expired, unsupported, or empty tokens.
+     * </p>
+     *
+     * @param authToken the JWT token string to validate
+     * @return {@code true} if the token is valid, {@code false} otherwise
+     */
     public boolean validateJwtToken(String authToken) {
         try {
             // Parse the token and verify its signature
