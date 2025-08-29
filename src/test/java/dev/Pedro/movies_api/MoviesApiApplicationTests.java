@@ -8,7 +8,7 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest
+@SpringBootTest(properties = "APP_NAME=movies-api")
 // @Testcontainers
 class MoviesApiApplicationTests {
 
