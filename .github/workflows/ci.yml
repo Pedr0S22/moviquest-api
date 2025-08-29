@@ -1,17 +1,14 @@
 name: CI/CD with Maven and Docker
 
 on:
-    push:
-        branches: [ "main" ]
-    pull_request:
-        branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build-test:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest, macos-latest]
+    runs-on: ubuntu-latest
     env:
       APP_NAME: movies-api
 
@@ -26,7 +23,7 @@ jobs:
           cache: maven
 
       - name: Build and Test with Maven
-        run: mvn -B clean package --file pom.xml
+        run: mvn -B clean verify --file pom.xml
 
   docker:
     needs: build-test
@@ -50,5 +47,4 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/springboot-app:latest
-
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/movies-api:latest
