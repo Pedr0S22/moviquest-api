@@ -11,10 +11,12 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @Testcontainers
 @EnableAutoConfiguration(exclude = {
-		org.springframework.boot.actuate.autoconfigure.audit.AuditEventsEndpointAutoConfiguration.class
+		org.springframework.boot.actuate.autoconfigure.audit.AuditEventsEndpointAutoConfiguration.class,
+		org.springframework.boot.actuate.autoconfigure.beans.BeansEndpointAutoConfiguration.class,
+		org.springframework.boot.actuate.autoconfigure.info.InfoEndpointAutoConfiguration.class
 })
 class MoviesApiApplicationTests {
 
