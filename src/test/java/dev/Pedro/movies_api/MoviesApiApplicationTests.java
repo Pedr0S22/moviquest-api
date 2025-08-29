@@ -8,17 +8,18 @@ import org.testcontainers.containers.MongoDBContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-@SpringBootTest(properties = "APP_NAME=movies-api")
-// @Testcontainers
+@SpringBootTest
+
+@Testcontainers
 class MoviesApiApplicationTests {
 
-	// @Container
-	// static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0");
+	@Container
+	static MongoDBContainer mongoDBContainer = new MongoDBContainer("mongo:7.0");
 
-	// @DynamicPropertySource
-	// static void setProperties(DynamicPropertyRegistry registry) {
-	// registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-	// }
+	@DynamicPropertySource
+	static void setProperties(DynamicPropertyRegistry registry) {
+		registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
+	}
 
 	@Test
 	void contextLoads() {

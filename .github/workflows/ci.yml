@@ -12,6 +12,8 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
+    env:
+      APP_NAME: movies-api
 
     steps:
       - uses: actions/checkout@v4
