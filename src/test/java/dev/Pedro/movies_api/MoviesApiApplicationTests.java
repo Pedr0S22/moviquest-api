@@ -1,6 +1,5 @@
 package dev.Pedro.movies_api;
 
-import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -18,9 +17,5 @@ class MoviesApiApplicationTests {
 	@DynamicPropertySource
 	static void setProperties(DynamicPropertyRegistry registry) {
 		registry.add("spring.data.mongodb.uri", mongoDBContainer::getReplicaSetUrl);
-	}
-
-	@Test
-	void contextLoads() {
 	}
 }
