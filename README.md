@@ -64,7 +64,7 @@ The purpose of MovieQuest was to **simulate a production-grade backend system** 
 3. **Search Movies with filters**
     - **EndPoint**:  `POST /api/v1/movies/search`
     - **[Optional] Input Parameters**: "title", "genres", "releaseDateAfter", "releaseDateBefore".
-    - **Note**: If no filter is applyed, this endpoint have the same output as "Get All Movies".
+    - **Note**: If no filter is applied, this endpoint have the same output as "Get All Movies".
 
 4. **Add Movie**  
    - **Endpoint**: `POST /api/v1/movies/newMovie`  
@@ -88,12 +88,12 @@ The purpose of MovieQuest was to **simulate a production-grade backend system** 
 
 1. **Add Review**  
    - **Endpoint**: `POST /api/v1/reviews`  
-   - **[Requeired] Input Parameters**: "imdbId", "body".  
+   - **[Required] Input Parameters**: "imdbId", "body".  
    - **Result**: Creates a review associated with the given `imdbId`.  
 
 2. **Update Review**  
    - **Endpoint**: `PATCH /api/v1/reviews/update/{id}`  
-   - **[Requeired] Input Parameters**: "imdbId", "body".    
+   - **[Required] Input Parameters**: "imdbId", "body".    
    - **Result**: Updates the specified review with the input parameters.
    - **Note**: Only the creator of that review can use this endpoint. The admins *don't* have access to this endpoint; By `{id}` I refer to the review Id showed while retrieving a movie with reviews.
 
@@ -106,7 +106,7 @@ The purpose of MovieQuest was to **simulate a production-grade backend system** 
 
 1. **Actuator** Monitoring
     - **Endpoint**: `GET /actuator`  
-    - **Result**: Returns a list of all Actuator Endpoints. Its crutial to have access to all operational information about the running application.
+    - **Result**: Returns a list of all Actuator Endpoints. Its crucial to have access to all operational information about the running application.
 
 2. **General Actuator Endpoints**
     - **Endpoint**: `GET /actuator/{endpoint}`  
@@ -127,7 +127,7 @@ The purpose of MovieQuest was to **simulate a production-grade backend system** 
 
 2. **User Login**  
    - **Endpoint**: `POST /api/v1/auth/login`  
-   - **[Required] Input Parameters**: "username, password"  
+   - **[Required] Input Parameters**: "username", "password".
    - **Result**: Returns a JWT token for authentication along with the user informations, with the exception of the encrypted password.
 
 ---
