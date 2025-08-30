@@ -9,6 +9,8 @@ on:
 jobs:
   build-test:
     runs-on: ${{matrix.os}}
+    env:
+      APP_NAME: moviesapi
     strategy:
       matrix:
         os: ["ubuntu-latest", "windows-latest", "macos-latest"]
