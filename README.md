@@ -45,11 +45,25 @@ The purpose of MovieQuest was to **simulate a production-grade backend system** 
 - Develop **unit tests** (JUnit, Mockito) and begin experimenting with integration tests for automated pipelines.  
 - Improve understanding of **RESTful API design** and CRUD operations.  
 - Implement robust **logging and monitoring**, including persisting logs and using background threads for efficiency.  
-- Experiment with **resilience patterns** (Resilience4j) to build fault-tolerant APIs.  
+- Experiment with **resilience patterns** (Resilience4j) to build fault-tolerant APIs.
+
+### Other Project Features and Documentation
+
+The project is well documented using **Javadocs**. You can access the API documentation in your browser:  
+   - Open `docs/apidocs/index.html` to view the full generated documentation.  
+
+The `logs/movies-api` folder contains rolling log files for one month in JSON format (powered by Logback). This allows for tracking errors and application activity efficiently.   
 
 ---
 
 ## User Roles Functionalities and API Endpoints  
+
+**Important Notes Before Using the Endpoints:** 
+
+1. These functionalities were tested with **Postman**. In this repository, there is a JSON file containing the Postman collection I created to test the app. You can download and import it for your own usage:  
+   - **File name**: `API_MovieQuest_postman_collection.json`  
+
+2. **All endpoints require authentication** to be used. You need to register and login to obtain a JWT access token. For each request (except login and signup), include the token in the request headers as a **Bearer Access Token**.  
 
 ### Movies-Related Functionalities
 
