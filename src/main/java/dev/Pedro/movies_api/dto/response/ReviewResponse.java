@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 
 import dev.Pedro.movies_api.model.Review;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ReviewResponse {
 
     private int status;
