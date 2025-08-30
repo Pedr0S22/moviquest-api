@@ -9,8 +9,10 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.annotation.Nullable;
 import jakarta.validation.constraints.PastOrPresent;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class SearchLogRequest {
 
     @Nullable

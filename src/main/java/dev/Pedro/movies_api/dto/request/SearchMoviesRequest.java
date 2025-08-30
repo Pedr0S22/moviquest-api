@@ -8,8 +8,10 @@ import org.springframework.format.annotation.DateTimeFormat;
 import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class SearchMoviesRequest {
 
     @Size(min = 2)
