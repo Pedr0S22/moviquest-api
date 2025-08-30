@@ -148,6 +148,58 @@ The `logs/movies-api` folder contains rolling log files for one month in JSON fo
 
 ## Setup Instructions  
 
-1. Clone the repository:  
+**Important Note for Both Setups**
+
+Open the `.env.example` file in the project (in `src/main/java/resources`), fill in all required environment variables, and save it as `.env`. This ensures the application has all necessary configuration for MongoDB, JWT secrets, and other environment-specific settings.
+
+### 1. Setup to Initialize the App Locally Using an IDE
+
+---
+
+1.1. **Clone the repository** and open it in your preferred IDE (IntelliJ IDEA, Eclipse, VS Code, etc.):  
    ```bash
-   git clone https://github.com/your-username/MovieQuest.git
+   git clone https://github.com/Pedr0S22/moviquest-api.git
+   ```
+
+1.2. **Build the project** using Maven:
+   ```bash
+   mvn clean install
+   ```
+
+1.3. **Run** the application:
+
+- **Through IDE**: Run the *MoviesApiApplication.java* file (in `src/main/java/dev/Pedro/movies_api`) directly from your IDE.
+- **Through Terminal**: ```mvn spring-boot:run```
+
+1.4. **Access the app** in your browser or Postman with:
+   ```bash
+   http://localhost:8080/<ENDPOINTS>
+   ```
+
+### 2. Setup to Initialize the App Using Docker
+
+---
+
+2.1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) if not installed yet.
+
+2.2. Ensure you are logged in to Docker - through Docker Desktop or at the Teminal using Docker ```Docker login <docker_hub_username>```.
+
+2.3. Search for the project image in Docker Desktop or at the Terminal (optional):
+  ```bash
+   docker search k45q4ckc/movies-api
+   ```
+
+2.4. **Pull** the project image:
+  ```bash
+   docker pull k45q4ckc/movies-api
+   ```
+
+2.5. **Run** the Docker container:
+  ```bash
+   docker run -d -p 8080:8080 --env-file "<path_to_.env_file>.env" k45q4ckc/movies-api:latest
+   ```
+
+2.6. **Access the app** in your browser or Postman with:
+   ```bash
+   http://localhost:8080/<ENDPOINTS>
+   ```
