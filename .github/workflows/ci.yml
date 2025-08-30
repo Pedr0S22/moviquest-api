@@ -70,3 +70,5 @@ jobs:
           file: ./Dockerfile
           push: true
           tags: ${{ secrets.DOCKERHUB_USERNAME }}/movies-api:latest
+
+      - run: docker image prune -f
