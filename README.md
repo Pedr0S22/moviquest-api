@@ -207,4 +207,4 @@ Open the `.env.example` file in the project (in `src/main/java/resources`), fill
 
 ## Authors
 
-- Pedro Silva (Pedr0S22): uc2023235452@student.uc.pt
+Pedro Silva (Pedr0S22): uc2023235452@student.uc.pt
