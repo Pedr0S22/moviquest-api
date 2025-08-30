@@ -182,7 +182,7 @@ Open the `.env.example` file in the project (in `src/main/java/resources`), fill
 
 2.1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop/) if not installed yet.
 
-2.2. Ensure you are logged in to Docker - through Docker Desktop or at the Teminal using Docker ```Docker login <docker_hub_username>```.
+2.2. Ensure you are logged in to Docker - through Docker Desktop or at the Terminal using Docker ```Docker login <docker_hub_username>```.
 
 2.3. Search for the project image in Docker Desktop or at the Terminal (optional):
   ```bash
@@ -203,3 +203,8 @@ Open the `.env.example` file in the project (in `src/main/java/resources`), fill
    ```bash
    http://localhost:8080/<ENDPOINTS>
    ```
+---
+
+## Authors
+
+- Pedro Silva (Pedr0S22): uc2023235452@student.uc.pt
