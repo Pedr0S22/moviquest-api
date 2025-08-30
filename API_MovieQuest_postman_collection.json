@@ -1,0 +1,459 @@
+{
+	"info": {
+		"_postman_id": "8ce9ea46-d4a6-44a6-a3d1-bf21beaa053b",
+		"name": "API MovieQuest",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "39842566"
+	},
+	"item": [
+		{
+			"name": "Movie Endpoints",
+			"item": [
+				{
+					"name": "All Movies",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU1MjA2NDIyLCJleHAiOjE3NTUyOTI4MjJ9.mirAWXO9npUlEVFl_-aZiqi0TNZ9kwmXHYQLEbHOd-Y",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/movies",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"movies"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single Movie",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU1MDg0NTE2LCJleHAiOjE3NTUxNzA5MTZ9.ChHYOMz5pLa4oAglx98-IPYFTtbUI1nf7fkZrb8S2mc",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/movies/wasd123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"wasd123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Movies",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU0OTk0MTE1LCJleHAiOjE3NTUwODA1MTV9.RYrE3MPU2KNcarZT44GTHOzsbMUNACb_oodl8EobBx0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Puss in Boots: The Last Wish\",\r\n    \"genres\":[\"Family\", \"Comedy\"],\r\n    \"releaseDateAfter\":\"2022-02-22\",\r\n    \"releaseDateBefore\":\"2023-02-22\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/movies/search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Insert Movie",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU0OTk0MTE1LCJleHAiOjE3NTUwODA1MTV9.RYrE3MPU2KNcarZT44GTHOzsbMUNACb_oodl8EobBx0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\": \"Test\",\r\n    \"genres\":[\"foo\", \"bar\"],\r\n    \"imdbId\":\"wasd123\",\r\n    \"releaseDate\":\"2025-08-12\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/movies/newMovie",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"newMovie"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Movie",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU0OTk0MTE1LCJleHAiOjE3NTUwODA1MTV9.RYrE3MPU2KNcarZT44GTHOzsbMUNACb_oodl8EobBx0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"title\":\"Test2\",\r\n    \"backdrops\":[\"https://ww.uc.pt\", \"https://www.dn.pt\", \"https://www.ola.pt\"],\r\n    \"genres\":[\"foo\", \"bar\", \"thing\"],\r\n    \"releaseDate\":\"2025-08-13\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/movies/update/wasd123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"update",
+								"wasd123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Movie",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU1MDA4MTE0LCJleHAiOjE3NTUwOTQ1MTR9.Go7wjFs5Wi58flbwkGtE-HMvQ_CH7KjOl6tveKh_vWI",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/movies/delete/wasd123",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"movies",
+								"delete",
+								"wasd123"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains all movies-related endpoints"
+		},
+		{
+			"name": "Review Endpoints",
+			"item": [
+				{
+					"name": "Insert Review",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU1MjA2NDIyLCJleHAiOjE3NTUyOTI4MjJ9.mirAWXO9npUlEVFl_-aZiqi0TNZ9kwmXHYQLEbHOd-Y",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"body\": \"Amazing Movie!\",\r\n    \"imdbId\": \"wasd123\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/reviews",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"reviews"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Review",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU1MDk1ODEyLCJleHAiOjE3NTUxODIyMTJ9.bTM1rLgCDe7FtXZSNCmpJyHjQgv-BoU5ZIOokQLf938",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/v1/reviews/delete/wasd123/689ca0e5dfba3b5cf1308d93",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"delete",
+								"wasd123",
+								"689ca0e5dfba3b5cf1308d93"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Review",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU1MTAwNTM4LCJleHAiOjE3NTUxODY5Mzh9.wJkx0Ap6A_vkEi5Yq8QVLGAkCMr_tAYCkM7S7nWum60",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"imdbId\":\"wasd123\",\r\n    \"body\":\"Updated review!\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/reviews/update/689cb1fe74027e730fb5cf3c",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"reviews",
+								"update",
+								"689cb1fe74027e730fb5cf3c"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains all reviews-related endpoints"
+		},
+		{
+			"name": "Admin Endpoints",
+			"item": [
+				{
+					"name": "Actuator Monitoring",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU2NTY1MTAyLCJleHAiOjE3NTY2NTE1MDJ9.yJdOoiOeyU2AjWZCGEoVOES8s5VTrTCvXNCfWGk4a2I",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/actuator/health",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"actuator",
+								"health"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search Logs",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJDYXdpbmFfIiwiaWF0IjoxNzU1MjA0OTI0LCJleHAiOjE3NTUyOTEzMjR9.77gWzkMSwTMcd3JDrIKZoHnR1orL1tCoBP8pCf8eXl0",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"level\": \"error\",\r\n    \"timestampAfter\": \"2025-08-14T20:30\",\r\n    \"timestampBefore\":\"2025-08-14T21:30\",\r\n    \"logger\":\"GlobalExceptionHandler\",\r\n    \"thread\":\"exec-6\",\r\n    \"messageKeywords\":\"json\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/logging/search",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"logging",
+								"search"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains only admin-related endpoints. It contains logging and actuator endpoints"
+		},
+		{
+			"name": "User Endpoints",
+			"item": [
+				{
+					"name": "Register new User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\":\"Carlitos\",\r\n    \"password\":\"123456789\",\r\n    \"email\":\"carlitos@gmail.com\",\r\n    \"roles\":[]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/auth/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login User",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"Cawina_\",\r\n    \"password\": \"NinaDidi_2\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/v1/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"v1",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"description": "This folder contains all users-related endpoints"
+		}
+	]
+}
